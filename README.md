@@ -30,14 +30,16 @@ A beautiful web-based Pokemon chat application that imports Pokemon from .pk8 fi
 - Team management (up to 6 Pokemon)
 - Release Pokemon functionality
 
-### 💬 **AI-Powered Personality Chat**
-- **Dynamic AI responses** using ChatGPT or Claude APIs
-- **Personality-driven conversations** based on species, nature, friendship, and level
-- **Friendship evolution** affects response warmth and openness
-- **Nature-based communication** styles (e.g., Timid Pokemon are shy, Jolly Pokemon are upbeat)
-- **Species-specific traits** influence conversation topics and behavior
+### 💬 **Advanced AI-Powered Personality Chat**
+- **Dynamic AI responses** using ChatGPT or Claude APIs with authentic animal intelligence
+- **Species-specific intelligence levels** (Basic, Average, High, Genius, Psychic) affecting communication complexity
+- **Location-based memories** - Pokemon remember their natural habitats (forest, cave, urban, etc.)
+- **Friendship-influenced nature reactions** - negative traits when wary, positive when trusting
+- **First encounter awakening scenarios** - special displacement confusion when newly imported
+- **Habitat-specific fears and comfort zones** based on natural environment
 - **Context-aware responses** that remember conversation history
-- **Graceful fallbacks** to template responses when AI is unavailable
+- **Graceful fallbacks** to intelligent template responses when AI is unavailable
+- **Authentic animal behavior** - Pokemon feel like real intelligent creatures given speech
 - Mobile-responsive chat interface
 
 ### 🌟 **PokeAPI Integration**
@@ -137,15 +139,46 @@ python main.py
   - Friendship level
   - Experience level
 
-## Pokemon Personality System
+## 🧠 Advanced Pokemon Personality System
 
-The chat responses are influenced by multiple factors:
+### **Species Intelligence Levels**
+- **Basic (Magikarp-like)**: Simple instinct-driven responses, basic concepts only
+- **Average (Grookey, Scorbunny)**: Can understand complex ideas, basic reasoning
+- **High (Pikachu, Rayquaza)**: Abstract thinking, problem-solving capabilities  
+- **Genius (Mewtwo, Alakazam)**: Near-human or superhuman intelligence
+- **Psychic (Mew, Celebi)**: Telepathic abilities, transcendent understanding
 
-- **Species**: Each species has unique personality traits (e.g., Celebi is gentle)
-- **Types**: Type combinations affect communication style (e.g., Psychic types are thoughtful)
-- **Nature**: Affects personality traits (e.g., Modest Pokemon are humble)
-- **Friendship**: Determines closeness and response warmth
-- **Level**: Higher levels show more maturity and wisdom
+### **Location-Based Personality Traits**
+Pokemon remember their natural habitats with specific memories and fears:
+
+- **Forest Pokemon**: Remember "rustling leaves, bird calls, morning dew" - fear open spaces and fire
+- **Cave Pokemon**: Remember "dripping water, cool stone, echoing footsteps" - fear bright lights
+- **Urban Pokemon**: Remember "car sounds, building lights, human voices" - fear wild predators
+- **Water Pokemon**: Remember "flowing water, fish jumping, wet rocks" - fear drought and pollution
+- **Mountain Pokemon**: Remember "wind howling, vast views, cold mornings" - fear landslides
+
+### **Friendship-Influenced Nature Reactions**
+The same nature manifests differently based on trust level:
+
+- **Low Friendship (0-69)**: Shows negative aspects (Brave → Reckless/Aggressive)
+- **Medium Friendship (70-149)**: Shows evolving traits (Brave → Slowly becoming protective)
+- **High Friendship (150-255)**: Shows positive aspects (Brave → Courageous protector)
+
+### **First Encounter Awakening System**
+Newly imported Pokemon experience displacement confusion:
+- **Habitat displacement memories**: "I remember the forest... where are the trees?"
+- **Intelligence-based reactions**: Smarter Pokemon understand the situation better
+- **Fear vs curiosity**: Based on friendship level and nature
+- **Digital space confusion**: Pokemon question the artificial environment
+
+### **Chat Response Factors**
+Every response is influenced by:
+- **Species intelligence** and communication ability
+- **Natural habitat** memories and environmental preferences
+- **Current friendship level** with the trainer
+- **Nature manifestation** (positive or negative based on trust)
+- **Conversation history** and context awareness
+- **Level-based maturity** and life experience
 
 ## File Structure
 
@@ -233,6 +266,15 @@ python migrate_database.py
 
 ### Test Suite
 ```bash
+# Test authentic Pokemon animal intelligence system
+python test_authentic_pokemon.py
+
+# Test location-based personality and first encounters
+python test_location_personality.py
+
+# Demo enhanced personality features
+python test_enhanced_features_demo.py
+
 # Test AI integration and personality system
 python test_ai_integration.py
 
@@ -244,6 +286,9 @@ python test_double_import_fix.py
 
 # Test pk8 parser accuracy
 python test_parser.py
+
+# Update habitat data for existing Pokemon
+python update_habitat_data.py
 ```
 
 ### PK8 Parser Features
@@ -274,11 +319,29 @@ The AI creates unique personalities for each Pokemon based on:
 - **Grookey**: Musical and rhythm-focused conversations
 - **Each species has unique characteristics**
 
+## 💬 Example Conversations
+
+### **First Encounter - Scared Sobble (Low Friendship)**
+**Trainer**: "Hello there, little one!"
+
+**Sobble**: "*Teary materializes in the digital space, immediately sensing the displacement from their natural environment* Stay back! I don't know you, I don't know this place! The sound of flowing water, the feel of mud between my toes... where has it gone? This place... it's not home. Not safe. Not right. *cowers and trembles* P-please don't hurt me... I just want to go home..."
+
+### **Forest Pikachu (High Friendship, Jolly Nature)**
+**Trainer**: "How are you feeling today?"
+
+**Pikachu**: "I'm feeling charged up and ready for action! ⚡️ Though I do miss the electric storms back in the forest - you know, when lightning would dance between the trees and I could feel the energy in the air. The berries here don't taste quite the same as the ones from my old territory, but being with you makes everything better!"
+
+### **Genius Mewtwo (Medium Friendship, Philosophical)**
+**Trainer**: "What do you think about humans?"
+
+**Mewtwo**: "Your species intrigues me, trainer. In the echo chambers of my cave, I pondered the duality of creation and destruction that defines humanity. You possess the capacity for both profound compassion and devastating cruelty. This digital realm you've brought me to... it defies the natural order I once knew, yet here we are, two conscious beings attempting to bridge the gap between our realities."
+
 **Dynamic Conversations:**
-- Responses evolve as friendship grows
-- Pokemon remember previous conversations
-- Personality traits combine for unique interactions
-- Species lore and abilities influence topics
+- **Intelligence-based complexity**: Simple Pokemon use basic concepts, genius Pokemon engage in philosophy
+- **Habitat memories**: Pokemon reference their natural environments and miss specific aspects
+- **Friendship evolution**: Responses grow warmer and more trusting over time
+- **Nature manifestation**: Same nature shows differently based on trust level
+- **First encounters**: Special displacement scenarios for newly imported Pokemon
 
 ## 🌐 API Endpoints
 
