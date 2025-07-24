@@ -108,12 +108,15 @@ class AIChatService:
         animal_base = profile['animal_base']
         friendship = profile['friendship_level']
         nature = profile['nature']
+        nature_reaction = profile['nature_reaction']
         level = profile['maturity_level']
         types = profile['types']
         genus = profile.get('genus', '')
         description = profile.get('description', '')
         is_legendary = profile.get('is_legendary', False)
         is_mythical = profile.get('is_mythical', False)
+        location_traits = profile['location_traits']
+        habitat = profile['habitat']
         
         # Get intelligence and communication descriptions
         intelligence_desc = PokemonIntelligence.get_intelligence_description(intelligence)
@@ -203,6 +206,7 @@ Behavioral Traits: {'; '.join(behavioral_traits)}
 🎭 PERSONALITY:
 Speech Pattern: {speech_pattern}
 Nature: {nature} - {nature_trait}
+Nature Manifestation: {nature_reaction['dominant_trait']} (Current trust level: {nature_reaction['manifestation']})
 Cognitive Traits: {cognitive_traits}
 
 ❤️ BOND WITH TRAINER:
@@ -214,6 +218,14 @@ Species: {species_name} ({genus})
 Types: {', '.join(types)}
 Level: {level} (affects maturity and experience)
 Description: {description}{special_status}
+
+🌍 HABITAT & MEMORIES:
+Natural Habitat: {location_traits['habitat_type'].title()}
+Environment: {location_traits['environment']}
+Comfort Zone: {location_traits['comfort_zone']}
+Survival Skills: {location_traits['survival_skills']}
+Natural Fears: {location_traits['fears']}
+Home Memories: {location_traits['memories']}
 
 🎯 AUTHENTIC POKEMON BEHAVIOR RULES:
 

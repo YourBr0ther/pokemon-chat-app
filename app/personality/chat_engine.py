@@ -22,6 +22,13 @@ class ChatEngine:
     def generate_response(self, pokemon_data: Dict, user_message: str, conversation_history: List = None) -> str:
         """Generate a personality-appropriate response using AI or templates"""
         
+        # Check if this is the first conversation (no previous messages)
+        is_first_encounter = not conversation_history or len(conversation_history) == 0
+        
+        # Handle first encounter specially
+        if is_first_encounter:
+            return self._handle_first_encounter(pokemon_data, user_message)
+        
         # Try AI-powered response first if available
         if self.ai_service.is_available():
             try:
@@ -308,3 +315,99 @@ class ChatEngine:
             response += random.choice(wise_additions)
         
         return response
+    
+    def _handle_first_encounter(self, pokemon_data: Dict, user_message: str) -> str:
+        """Handle the very first conversation with a Pokemon - special encounter scenario"""
+        from app.services.pokemon_intelligence import PokemonPersonalityBuilder
+        
+        # Generate first encounter scenario
+        first_encounter = PokemonPersonalityBuilder.get_first_encounter_scenario(pokemon_data)
+        
+        # Try AI-powered first encounter if available
+        if self.ai_service.is_available():
+            try:
+                # Build special first encounter prompt
+                first_encounter_prompt = f"""
+FIRST ENCOUNTER SCENARIO: This is your very first interaction with your trainer in this digital space.
+
+{first_encounter['awakening_description']}
+
+SCENARIO CONTEXT:
+- Primary Emotion: {first_encounter['primary_emotion'].upper()}
+- Reaction Intensity: {first_encounter['reaction_intensity'].upper()}
+- Trust Level: {first_encounter['trust_level'].upper()}
+
+DISPLACEMENT MEMORY: {first_encounter['displacement_memory']}
+
+Your first words should reflect:
+1. Confusion about being in a strange new environment
+2. {first_encounter['primary_emotion'].title()} as your dominant emotion
+3. Your species-specific intelligence level and communication style
+4. Memory fragments of your natural habitat
+5. Uncertainty about who this trainer is and what they want
+
+Trainer's first message to you: "{user_message}"
+
+Respond as {pokemon_data.get('nickname', pokemon_data.get('species_name', 'Pokemon'))} experiencing this jarring first moment of awareness in the digital space. Your response should feel authentically like a frightened/confused animal that has just gained the ability to speak."""
+                
+                # Generate AI response with first encounter context
+                from app.services.ai_chat_service import AIProvider
+                provider = AIProvider.OPENAI if self.ai_service.openai_api_key else AIProvider.CLAUDE
+                ai_response = self.ai_service._call_ai_api(
+                    provider,
+                    self.ai_service._build_personality_prompt(pokemon_data),
+                    first_encounter_prompt
+                )
+                
+                if ai_response and len(ai_response.strip()) > 0:
+                    logger.info(f"Generated AI first encounter for {pokemon_data.get('nickname', 'Pokemon')}")
+                    return ai_response
+                    
+            except Exception as e:
+                logger.error(f"AI first encounter generation failed: {e}")
+        
+        # Fallback to template-based first encounter
+        logger.info(f"Using template-based first encounter for {pokemon_data.get('nickname', 'Pokemon')}")
+        return self._generate_template_first_encounter(pokemon_data, first_encounter, user_message)
+    
+    def _generate_template_first_encounter(self, pokemon_data: Dict, first_encounter: Dict, user_message: str) -> str:
+        """Generate template-based first encounter response"""
+        nickname = pokemon_data.get('nickname', pokemon_data.get('species_name', 'Pokemon'))
+        
+        # Start with awakening description
+        response_parts = [first_encounter['awakening_description']]
+        
+        # Add opening reaction
+        response_parts.append(first_encounter['opening_line'])
+        
+        # Add displacement memory
+        response_parts.append(first_encounter['displacement_memory'])
+        
+        # Add species-specific confusion based on intelligence
+        species_id = pokemon_data.get('species_id', 0)
+        if species_id in [150]:  # Mewtwo - high intelligence
+            response_parts.append("This digital construct... it defies natural law. What manner of technology is this?")
+        elif species_id in [25]:  # Pikachu - medium-high intelligence
+            response_parts.append("The air tastes wrong, smells wrong... nothing here feels real. What happened to the world?")
+        elif species_id in [810]:  # Grookey - average intelligence
+            response_parts.append("Where are all the trees? Where are the sounds of the forest? I... I want to go home...")
+        else:
+            response_parts.append("This place... it's not home. Not safe. Not right.")
+        
+        # Add nature-influenced reaction to trainer
+        nature = pokemon_data.get('nature', 'Hardy')
+        friendship = pokemon_data.get('friendship', 70)
+        
+        if friendship < 50:
+            if nature in ['Brave', 'Bold', 'Adamant']:
+                response_parts.append("*bristles defensively* Stay back! I don't know what you want, but I won't go down without a fight!")
+            elif nature in ['Timid', 'Bashful', 'Careful']:
+                response_parts.append("*cowers and trembles* P-please don't hurt me... I just want to go home...")
+            else:
+                response_parts.append("*backs away cautiously* Who are you? What do you want from me?")
+        elif friendship < 100:
+            response_parts.append("You... you feel familiar somehow, but I can't remember. Are you... are you safe?")
+        else:
+            response_parts.append("There's something about you... something comforting. But this place... it still scares me.")
+        
+        return " ".join(response_parts)
