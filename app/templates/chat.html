@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Chat - Pokemon Chat App{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-sidebar">
+        <h3>Your Team</h3>
+        <div class="team-list" id="team-list">
+            <!-- Team Pokemon will be displayed here -->
+        </div>
+        <div class="sidebar-empty hidden" id="sidebar-empty">
+            <p>No team members yet</p>
+            <a href="/pokedex" class="btn btn-small">Build Team</a>
+        </div>
+    </div>
+
+    <div class="chat-main">
+        <div class="chat-header" id="chat-header">
+            <div class="chat-header-content">
+                <div class="chat-pokemon-sprite" id="current-pokemon-sprite">
+                    <!-- Pokemon sprite will be displayed here -->
+                </div>
+                <div class="chat-pokemon-info">
+                    <h3 id="current-pokemon-name">Select a Pokemon to chat</h3>
+                    <span id="current-pokemon-details"></span>
+                </div>
+            </div>
+            <div class="chat-actions">
+                <button class="btn btn-small btn-secondary" id="clear-chat-btn" onclick="clearChatHistory()" style="display: none;">
+                    Clear History
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+            <div class="chat-welcome" id="chat-welcome">
+                <h3>Welcome to PokeChat!</h3>
+                <p>Select a Pokemon from your team on the left to start chatting.</p>
+                <p>If you don't have any team members yet, visit the <a href="/pokedex">Pokedex</a> to build your team.</p>
+            </div>
+        </div>
+
+        <div class="chat-input-container" id="chat-input-container" style="display: none;">
+            <form class="chat-form" onsubmit="sendMessage(event)">
+                <input type="text" id="message-input" placeholder="Type your message..." class="chat-input" autocomplete="off">
+                <button type="submit" class="send-btn">Send</button>
+            </form>
+        </div>
+
+        <div class="typing-indicator hidden" id="typing-indicator">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span id="typing-pokemon">Pokemon is typing...</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

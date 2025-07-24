@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Import Pokemon - Pokemon Chat App{% endblock %}
+
+{% block content %}
+<div class="import-container">
+    <h2>Import Pokemon</h2>
+    <p class="subtitle">Upload a .pk8 file to add a Pokemon to your collection</p>
+
+    <div class="upload-section">
+        <div class="upload-area" id="upload-area">
+            <div class="upload-content">
+                <div class="upload-icon">📁</div>
+                <p class="upload-text">Drop your .pk8 file here or click to browse</p>
+                <input type="file" id="file-input" accept=".pk8" style="display: none;">
+                <button class="upload-btn" onclick="document.getElementById('file-input').click()">
+                    Choose File
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-section hidden" id="preview-section">
+        <h3>Pokemon Preview</h3>
+        <div class="pokemon-preview" id="pokemon-preview">
+            <!-- Pokemon data will be displayed here -->
+        </div>
+        
+        <div class="preview-actions">
+            <button class="btn btn-secondary" onclick="cancelImport()">Cancel</button>
+            <button class="btn btn-primary" onclick="confirmImport(event)" id="confirm-btn">Add to Pokedex</button>
+        </div>
+    </div>
+
+    <div class="loading-section hidden" id="loading-section">
+        <div class="loading-spinner"></div>
+        <p>Processing your Pokemon...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/import.js') }}"></script>
+{% endblock %}

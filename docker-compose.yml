@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  pokemon-chat-app:
+    build: .
+    ports:
+      - "5005:5000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=your-secret-key-change-in-production
+      - DATABASE_URL=sqlite:///pokemon_chat.db
+    volumes:
+      - pokemon_data:/app/instance
+      - pokemon_uploads:/app/instance/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  pokemon_data:
+    driver: local
+  pokemon_uploads:
+    driver: local

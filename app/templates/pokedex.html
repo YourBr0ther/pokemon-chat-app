@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Pokedex - Pokemon Chat App{% endblock %}
+
+{% block content %}
+<div class="pokedex-container">
+    <div class="pokedex-header">
+        <h2>My Pokedex</h2>
+        <div class="team-status">
+            <span id="team-count">Team: 0/6</span>
+        </div>
+    </div>
+
+    <div class="team-section">
+        <h3>Current Team</h3>
+        <div class="team-grid" id="team-grid">
+            <!-- Team Pokemon will be displayed here -->
+        </div>
+    </div>
+
+    <div class="pokemon-section">
+        <div class="section-header">
+            <h3>All Pokemon</h3>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search Pokemon..." class="search-input">
+            </div>
+        </div>
+        
+        <div class="pokemon-grid" id="pokemon-grid">
+            <!-- All Pokemon will be displayed here -->
+        </div>
+    </div>
+
+    <div class="empty-state hidden" id="empty-state">
+        <div class="empty-icon">📱</div>
+        <h3>No Pokemon Yet</h3>
+        <p>Import your first Pokemon from a .pk8 file!</p>
+        <a href="/import" class="btn btn-primary">Import Pokemon</a>
+    </div>
+</div>
+
+<!-- Pokemon Detail Modal -->
+<div class="modal hidden" id="pokemon-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title">Pokemon Details</h3>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <!-- Pokemon details will be displayed here -->
+        </div>
+        <div class="modal-actions" id="modal-actions">
+            <!-- Action buttons will be displayed here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/pokedex.js') }}"></script>
+{% endblock %}
