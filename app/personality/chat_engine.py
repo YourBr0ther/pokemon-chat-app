@@ -65,130 +65,130 @@ class ChatEngine:
         return {
             'greeting': {
                 'energetic': [
-                    "Hey there! I'm so excited to talk with you!",
-                    "Hi! What's up? I've been waiting to chat!",
-                    "Hello! Ready for some fun conversation?"
+                    "*bounces excitedly, tail wagging* You're here! You smell familiar... trainer?",
+                    "*perks up with bright eyes* Something new! *circles curiously* Are you safe?",
+                    "*body vibrates with energy* This strange place feels less scary when you're here!"
                 ],
                 'gentle': [
-                    "Hello there, friend. It's nice to meet you.",
-                    "Hi! I hope you're having a wonderful day.",
-                    "Greetings! I'm happy to chat with you."
+                    "*approaches slowly with calm body language* Hello... you feel safe to me.",
+                    "*tilts head with soft eyes* Your scent is kind. I sense no danger from you.",
+                    "*settles peacefully nearby* In this strange place, your presence brings comfort."
                 ],
                 'confident': [
-                    "Greetings. I suppose you want to talk?",
-                    "Hello. I trust you have something interesting to say.",
-                    "You have my attention. Speak."
+                    "*stands tall, assessing* You dare approach me in this realm? State your purpose.",
+                    "*maintains steady gaze* I sense strength in you. What do you want, human?",
+                    "*ears forward, alert but unafraid* You have earned my attention. Speak."
                 ],
                 'playful': [
-                    "Hehe! Hi there! Want to play or chat?",
-                    "Hello! Got any fun stories to share?",
-                    "Hi! What kind of mischief are we getting into today?"
+                    "*pounces playfully* Ooh! A new friend! *spins in circle* Want to explore together?",
+                    "*makes playful chittering sounds* You look fun! Got any games or adventures?",
+                    "*wiggles with excitement* This digital place is weird, but you make it interesting!"
                 ],
                 'mysterious': [
-                    "So... you've come to speak with me.",
-                    "Hello there. What brings you to me?",
-                    "Interesting... another conversation begins."
+                    "*emerges from shadows* So... you have found me in this strange realm.",
+                    "*eyes glowing with ancient wisdom* Another soul wanders into my presence...",
+                    "*voice echoes mysteriously* The digital winds brought you to me... interesting."
                 ],
                 'shy': [
-                    "Oh! H-hello there...",
-                    "Um, hi... nice to meet you...",
-                    "Hello... I hope we can be friends..."
+                    "*hides partially, peeking out* Oh! *startled movements* H-hello... are you friendly?",
+                    "*backs away cautiously* Um... *nervous body language* you won't hurt me, will you?",
+                    "*whispers softly* Hello... *ready to flee* I'm still learning to trust here..."
                 ]
             },
             'general': {
                 'energetic': [
-                    "That sounds amazing! Tell me more!",
-                    "Wow! I love your enthusiasm!",
-                    "That's so cool! What else is on your mind?"
+                    "*ears perk up, tail wagging faster* That sounds exciting! *bounces* Tell me more about this!",
+                    "*eyes sparkle with interest* Wow! *spins around* Your energy makes me happy!",
+                    "*vibrates with excitement* That's fascinating! *nose twitching* What else happened?"
                 ],
                 'gentle': [
-                    "That's very interesting. How do you feel about it?",
-                    "I appreciate you sharing that with me.",
-                    "That sounds meaningful to you."
+                    "*listens attentively with soft eyes* That sounds important to you... *nods slowly*",
+                    "*settles closer, showing trust* Thank you for sharing that with me, friend.",
+                    "*tilts head thoughtfully* I can sense this means much to you..."
                 ],
                 'confident': [
-                    "Naturally. I would expect nothing less.",
-                    "Of course. That makes perfect sense.",
-                    "An obvious conclusion, but well stated."
+                    "*nods with authority* Yes. This aligns with my understanding of things.",
+                    "*maintains steady gaze* Of course. I expected as much from you.",
+                    "*stands proudly* A sensible observation. You show wisdom."
                 ],
                 'playful': [
-                    "Ooh, that's fun! What happens next?",
-                    "Hehe, I like the way you think!",
-                    "That's amusing! Got any more stories?"
+                    "*playful pounce* Ooh, that's interesting! *rolls over* What happened next?",
+                    "*chittering with amusement* Hehe, I like how your mind works! *playful swat*",
+                    "*wiggles excitedly* That sounds fun! *bounces* Got more stories like that?"
                 ],
                 'mysterious': [
-                    "How intriguing... there's more to this, isn't there?",
-                    "I see... the truth runs deeper than appearances.",
-                    "Hmm... interesting perspective you have there."
+                    "*eyes narrow with ancient knowledge* Intriguing... I sense deeper currents here...",
+                    "*voice carries otherworldly wisdom* Yes... the surface hides greater truths...",
+                    "*gazes into distance* Hmm... your words echo with hidden meaning..."
                 ],
                 'shy': [
-                    "Oh, that's... that's really nice...",
-                    "I think I understand... maybe...",
-                    "Um, that sounds important to you..."
+                    "*peeks out shyly* Oh... *nervous fidgeting* that sounds really nice...",
+                    "*whispers softly* I think... I think I understand... *hides partially*",
+                    "*timid movements* Um... *quiet voice* that seems important to you..."
                 ]
             },
             'compliment': {
                 'energetic': [
-                    "Aww, thank you! You're pretty awesome too!",
-                    "That's so sweet! You just made my day!",
-                    "Thanks! You're the best!"
+                    "*tail wagging intensely* Aww! *bounces happily* You're amazing too, trainer!",
+                    "*spins with joy* That makes my heart feel so warm! *nuzzles affectionately*",
+                    "*beaming with happiness* Thanks! *playful hop* You make me feel special!"
                 ],
                 'gentle': [
-                    "Thank you so much. Your kindness means a lot to me.",
-                    "That's very thoughtful of you to say.",
-                    "I'm touched by your words. Thank you."
+                    "*soft purring sounds* Thank you... *rubs against you gently* Your kindness touches my soul.",
+                    "*peaceful expression* Your words are like gentle sunlight... *settles contentedly*",
+                    "*quiet gratitude* I'm deeply moved... *shows trust through relaxed posture*"
                 ],
                 'confident': [
-                    "Well, of course I am. But thank you for noticing.",
-                    "Your observation is correct. I appreciate the recognition.",
-                    "Naturally. I'm glad you can see that."
+                    "*stands with pride* Of course. You recognize quality when you see it.",
+                    "*nods regally* Your judgment is sound. I am indeed impressive.",
+                    "*chest puffed with dignity* Naturally. Few understand my true worth."
                 ],
                 'playful': [
-                    "Hehe, you flatter me! Want to be best friends?",
-                    "Aww, you're making me blush! You're pretty great too!",
-                    "Thanks! I think you're pretty special yourself!"
+                    "*rolls over giggling* Hehe, you make me happy! *paws playfully* Best friends forever?",
+                    "*wiggles with delight* Aww, you're making me all fuzzy inside! *playful tackle*",
+                    "*bounces excitedly* Thanks! *spins* I think you're absolutely wonderful too!"
                 ],
                 'mysterious': [
-                    "Your words... they reveal more about you than you know.",
-                    "Interesting... few see me as I truly am.",
-                    "Thank you... though I wonder what you truly see in me."
+                    "*ancient eyes glowing* Your words... they carry deeper meaning than you know...",
+                    "*voice echoes with wisdom* Few mortals perceive my true essence... interesting...",
+                    "*gazes through dimensions* Thank you... though you see only shadows of what I am..."
                 ],
                 'shy': [
-                    "Oh! Um... th-thank you... that means a lot...",
-                    "Really? You think so? That's... that's so nice...",
-                    "I... I don't know what to say... thank you..."
+                    "*hides face, peeking through paws* Oh! *nervous giggling* Th-thank you so much...",
+                    "*whispers with wonder* Really? You think so? *timid but happy movements*",
+                    "*barely audible* I... I don't know what to say... *overwhelmed with joy*"
                 ]
             },
             'question': {
                 'energetic': [
-                    "Great question! Let me think... Well, I'd say...",
-                    "Ooh! I love questions! Here's what I think:",
-                    "That's a fun one to think about!"
+                    "*ears perk up with curiosity* Ooh! *head tilts* Let me think with my animal brain... *excited pacing*",
+                    "*bounces with interest* I love when you're curious! *spins* Here's what my instincts tell me:",
+                    "*vibrates with thought* That makes my mind work! *nose twitching* Fun to ponder!"
                 ],
                 'gentle': [
-                    "That's a thoughtful question. I believe...",
-                    "Let me consider that carefully...",
-                    "What a wonderful thing to ask about."
+                    "*settles thoughtfully* That's a deep question... *quiet contemplation* From my heart, I feel...",
+                    "*tilts head with wisdom* Let me search my animal understanding... *soft rumbling*",
+                    "*peaceful expression* Such wonderful curiosity... *content sigh* I sense..."
                 ],
                 'confident': [
-                    "Obviously, the answer is...",
-                    "I'm glad you asked. The truth is...",
-                    "An excellent question with a clear answer:"
+                    "*stands with authority* The answer is clear to one such as I...",
+                    "*powerful gaze* You seek wisdom. I shall provide it:",
+                    "*regal bearing* An excellent inquiry. My superior knowledge reveals..."
                 ],
                 'playful': [
-                    "Ooh, you're curious! I like that! So...",
-                    "Hehe, good question! Want to know a secret?",
-                    "That's a fun mystery to solve!"
+                    "*pounces on the question* Ooh, you're so curious! *wiggles* I like that about you!",
+                    "*rolls over with glee* Hehe, want to know what I think? *playful swat* It's fun!",
+                    "*bounces excitedly* That's like a puzzle for my animal brain! *spins* Let me figure it out!"
                 ],
                 'mysterious': [
-                    "Ah... you ask the right questions...",
-                    "Some answers are not easily given...",
-                    "You seek knowledge... interesting..."
+                    "*eyes glow with ancient knowledge* Ah... you ask what few dare to question...",
+                    "*voice echoes from otherworldly realms* Some truths are hidden in shadow...",
+                    "*gazes beyond reality* You seek forbidden knowledge... how intriguing..."
                 ],
                 'shy': [
-                    "Oh, um... that's a good question... I think...",
-                    "Well... if I had to guess... maybe...",
-                    "That's... that's hard to answer... but maybe..."
+                    "*peeks out nervously* Oh... *fidgets* that's hard to answer... *whispers* maybe...",
+                    "*hides partially* Um... *quiet voice* I'm not sure... *timid attempt* but perhaps...",
+                    "*nervous movements* That's... that's really hard... *barely audible* I think maybe..."
                 ]
             }
         }
@@ -265,52 +265,94 @@ class ChatEngine:
         return response
     
     def _make_response_distant(self, response: str) -> str:
-        """Make response more formal/distant for low friendship"""
+        """Make response more wary/untrusting for low friendship - authentic animal behavior"""
+        # Add cautious body language and keep distance
         distant_modifiers = [
-            lambda r: r.replace("!", "."),
-            lambda r: r.replace("you're", "you are"),
-            lambda r: r.replace("That's", "That is"),
-            lambda r: r.replace("I'm", "I am")
+            lambda r: r.replace("!", "..."),  # Less enthusiastic
+            lambda r: r.replace("*bounces excitedly*", "*keeps distance, watching*"),
+            lambda r: r.replace("*approaches*", "*stays back, observing*"),
+            lambda r: r.replace("*nuzzles*", "*sniffs cautiously from afar*"),
+            lambda r: r.replace("trainer", "human"),  # More formal address
         ]
         
         for modifier in distant_modifiers:
             response = modifier(response)
         
+        # Add wary animal behavior
+        if "*" not in response:  # Only add if no body language already present
+            response = "*ears back, maintaining distance* " + response
+        
         return response
     
     def _make_response_affectionate(self, response: str, nickname: str) -> str:
-        """Make response more affectionate for high friendship"""
-        # Occasionally add affectionate terms
-        if random.random() < 0.3:
-            terms = [f"my friend", f"buddy", f"pal"]
-            term = random.choice(terms)
-            if not response.endswith('!'):
-                response += f", {term}!"
-            else:
-                response = response[:-1] + f", {term}!"
+        """Make response more bonded/trusting for high friendship - authentic animal behavior"""
+        # Add close bonding behaviors
+        affectionate_modifiers = [
+            lambda r: r.replace("*approaches slowly*", "*bounds over eagerly*"),
+            lambda r: r.replace("*keeps distance*", "*comes close, seeking comfort*"),
+            lambda r: r.replace("human", "my trusted human"),
+            lambda r: r.replace("you", "you, my bonded one") if random.random() < 0.2 else r,
+        ]
+        
+        for modifier in affectionate_modifiers:
+            response = modifier(response)
+        
+        # Add bonded animal behaviors
+        if random.random() < 0.4:
+            bonding_behaviors = [
+                "*rubs against you affectionately*",
+                "*nuzzles you with deep trust*", 
+                "*settles close to your side*",
+                "*purrs contentedly in your presence*"
+            ]
+            behavior = random.choice(bonding_behaviors)
+            response += f" {behavior}"
         
         return response
     
     def _make_response_young(self, response: str) -> str:
-        """Make response sound younger/more naive"""
+        """Make response show youthful animal energy and curiosity"""
         young_modifiers = [
-            lambda r: r.replace("That's amazing", "That's super cool"),
-            lambda r: r.replace("interesting", "neat"),
-            lambda r: r.replace("wonderful", "awesome")
+            lambda r: r.replace("*settles*", "*wiggles impatiently*"),
+            lambda r: r.replace("*approaches*", "*bounds over playfully*"),
+            lambda r: r.replace("*listens*", "*ears perked, practically vibrating with attention*"),
+            lambda r: r.replace("I sense", "Ooh, I feel"),
+            lambda r: r.replace("I understand", "I think I get it!"),
         ]
         
         for modifier in young_modifiers:
             response = modifier(response)
         
+        # Add youthful animal behaviors
+        if random.random() < 0.3:
+            youthful_additions = [
+                " *bounces with puppy-like enthusiasm*",
+                " *spins in excited circles*", 
+                " *paws at the ground with eager energy*",
+                " *tilts head with innocent curiosity*"
+            ]
+            response += random.choice(youthful_additions)
+        
         return response
     
     def _make_response_wise(self, response: str) -> str:
-        """Make response sound more mature/wise"""
-        if random.random() < 0.2:
+        """Make response show mature animal wisdom and experience"""
+        wise_modifiers = [
+            lambda r: r.replace("*bounces*", "*settles with dignified composure*"),
+            lambda r: r.replace("*spins*", "*moves with measured grace*"),
+            lambda r: r.replace("That's exciting!", "That holds deep meaning."),
+        ]
+        
+        for modifier in wise_modifiers:
+            response = modifier(response)
+        
+        # Add wise animal behaviors and insights
+        if random.random() < 0.3:
             wise_additions = [
-                " In my experience, this often leads to growth.",
-                " I've learned much about this over the years.",
-                " Time has taught me to appreciate such moments."
+                " *gazes with the wisdom of many seasons*",
+                " *nods with ancient understanding* I have seen much in my long life.",
+                " *settles with the patience that comes from experience*",
+                " My old bones have felt many such moments..."
             ]
             response += random.choice(wise_additions)
         
