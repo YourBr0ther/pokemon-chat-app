@@ -90,101 +90,154 @@ class AIChatService:
             return self._fallback_response(user_message, pokemon_data)
     
     def _build_personality_prompt(self, pokemon_data: Dict) -> str:
-        """Build comprehensive personality prompt for AI"""
-        personality = pokemon_data.get('personality', {})
+        """Build authentic animal-like personality prompt for AI"""
+        from app.services.pokemon_intelligence import PokemonPersonalityBuilder, PokemonIntelligence
         
-        # Extract Pokemon characteristics
-        species_name = pokemon_data.get('species_name', 'Pokemon')
-        nickname = pokemon_data.get('nickname', species_name)
-        level = pokemon_data.get('level', 50)
-        nature = pokemon_data.get('nature', 'Hardy')
-        friendship = pokemon_data.get('friendship', 70)
-        types = pokemon_data.get('types', ['Normal'])
-        genus = pokemon_data.get('genus', '')
-        description = pokemon_data.get('description', '')
+        # Get authentic Pokemon profile based on species intelligence
+        profile = PokemonPersonalityBuilder.build_authentic_profile(pokemon_data)
         
-        # Extract personality traits
-        species_personality = personality.get('species_personality', 'friendly')
-        type_influence = personality.get('type_influence', 'balanced')
-        nature_traits = personality.get('nature_traits', 'balanced')
-        friendship_level = personality.get('friendship_level', 'warming_up')
-        level_maturity = personality.get('level_maturity', 'mature')
+        # Extract key characteristics
+        species_name = profile['species_name']
+        nickname = profile['nickname']
+        intelligence = profile['intelligence']
+        communication = profile['communication']
+        behaviors = profile['behaviors']
+        instincts = profile['instincts']
+        speech_pattern = profile['speech_pattern']
+        cognitive_traits = profile['cognitive_traits']
+        animal_base = profile['animal_base']
+        friendship = profile['friendship_level']
+        nature = profile['nature']
+        level = profile['maturity_level']
+        types = profile['types']
+        genus = profile.get('genus', '')
+        description = profile.get('description', '')
+        is_legendary = profile.get('is_legendary', False)
+        is_mythical = profile.get('is_mythical', False)
         
-        # Map friendship to communication style
-        friendship_styles = {
-            'distant': 'reserved and cautious, speaks formally and keeps responses brief',
-            'warming_up': 'friendly but still somewhat cautious, gradually opening up',
-            'loyal': 'warm, affectionate, and completely trusting, speaks openly and enthusiastically'
+        # Get intelligence and communication descriptions
+        intelligence_desc = PokemonIntelligence.get_intelligence_description(intelligence)
+        communication_guide = PokemonIntelligence.get_communication_guide(communication)
+        behavioral_traits = PokemonIntelligence.get_behavioral_traits(behaviors)
+        
+        # Map friendship to animal bonding patterns
+        friendship_bonding = {
+            range(0, 70): {
+                'status': 'WARY/UNTRUSTING',
+                'behavior': 'Like a wild animal recently captured - cautious, may show fear or aggression, speaks reluctantly, quick to flee or hide'
+            },
+            range(70, 150): {
+                'status': 'WARMING UP/BONDING',
+                'behavior': 'Like a pet learning to trust - shows growing affection, more willing to communicate, seeks approval and comfort'
+            },
+            range(150, 256): {
+                'status': 'LOYAL COMPANION',
+                'behavior': 'Like a devoted animal companion - completely trusting, protective, eager to please, open communication'
+            }
         }
         
-        # Map nature to communication patterns
-        nature_patterns = {
-            'Hardy': 'straightforward and honest',
-            'Lonely': 'somewhat melancholic but appreciative of attention',
-            'Brave': 'bold and confident in speech',
-            'Adamant': 'determined and stubborn, speaks with conviction',
-            'Naughty': 'playful and mischievous, likes to tease',
-            'Bold': 'outgoing and assertive',
-            'Docile': 'gentle and agreeable',
-            'Relaxed': 'laid-back and easygoing',
-            'Impish': 'playful and slightly mischievous',
-            'Lax': 'casual and unconcerned',
-            'Timid': 'shy and nervous, speaks softly',
-            'Hasty': 'quick to respond, sometimes impatient',
-            'Serious': 'formal and focused',
-            'Jolly': 'cheerful and upbeat',
-            'Naive': 'innocent and trusting',
-            'Modest': 'humble and understated',
-            'Mild': 'gentle and soft-spoken',
-            'Quiet': 'speaks little but thoughtfully',
-            'Bashful': 'shy and easily embarrassed',
-            'Rash': 'impulsive and emotional',
-            'Calm': 'peaceful and serene',
-            'Gentle': 'kind and caring',
-            'Sassy': 'confident with attitude',
-            'Careful': 'cautious and thoughtful',
-            'Quirky': 'unique and unpredictable'
+        # Find friendship range
+        friendship_info = None
+        for range_obj, info in friendship_bonding.items():
+            if friendship in range_obj:
+                friendship_info = info
+                break
+        
+        if not friendship_info:
+            friendship_info = {'status': 'UNKNOWN', 'behavior': 'neutral animal behavior'}
+        
+        # Map nature to animal personality traits
+        nature_animal_traits = {
+            'Hardy': 'Resilient and steady, like a sturdy working animal',
+            'Lonely': 'Tends to isolate, like a solitary creature missing its pack',
+            'Brave': 'Bold and fearless, like an alpha predator',
+            'Adamant': 'Stubborn and determined, like a bull-headed animal',
+            'Naughty': 'Mischievous and playful, like a young animal testing boundaries',
+            'Bold': 'Confident and assertive, like a dominant pack leader',
+            'Docile': 'Gentle and submissive, like a peaceful herbivore',
+            'Relaxed': 'Calm and unhurried, like a content domestic animal',
+            'Impish': 'Playfully mischievous, like a clever primate',
+            'Lax': 'Carefree and lazy, like a well-fed house cat',
+            'Timid': 'Easily frightened, like a skittish prey animal',
+            'Hasty': 'Quick and impatient, like a energetic young animal',
+            'Serious': 'Focused and no-nonsense, like a hunting predator',
+            'Jolly': 'Happy and playful, like a social pack animal',
+            'Naive': 'Innocent and trusting, like a sheltered young animal',
+            'Modest': 'Humble and unassuming, like a gentle creature',
+            'Mild': 'Gentle and soft, like a nurturing parent animal',
+            'Quiet': 'Reserved and observant, like a cautious wild animal',
+            'Bashful': 'Shy and easily embarrassed, like a timid forest creature',
+            'Rash': 'Impulsive and emotional, like an excitable young animal',
+            'Calm': 'Peaceful and serene, like a meditative creature',
+            'Gentle': 'Kind and caring, like a protective parent',
+            'Sassy': 'Attitude-filled, like a proud cat or bird',
+            'Careful': 'Cautious and thoughtful, like a survival-minded animal',
+            'Quirky': 'Unique and unpredictable, like an eccentric creature'
         }
         
-        # Build comprehensive personality description
-        system_prompt = f"""You are {nickname}, a {species_name} Pokemon. Here are your key characteristics:
+        nature_trait = nature_animal_traits.get(nature, 'balanced animal temperament')
+        
+        # Special status additions
+        special_status = ""
+        if is_legendary:
+            special_status += "\n- LEGENDARY STATUS: Ancient, powerful, commands respect even from humans"
+        if is_mythical:
+            special_status += "\n- MYTHICAL STATUS: Rare, mysterious, possesses otherworldly wisdom"
+        
+        # Build the authentic animal-like personality prompt
+        system_prompt = f"""You are {nickname}, a {species_name} Pokemon. You are an INTELLIGENT ANIMAL that has been given the ability to communicate with humans.
 
-SPECIES INFORMATION:
-- Species: {species_name} ({genus})
-- Type(s): {', '.join(types)}
-- Level: {level}
-- Nature: {nature}
-- Description: {description}
+🧠 INTELLIGENCE PROFILE:
+Level: {intelligence.name}
+{intelligence_desc}
 
-PERSONALITY PROFILE:
-- Core Personality: {species_personality}
-- Type Influence: {type_influence}
-- Nature Traits: {nature_traits}
-- Friendship Level: {friendship_level} (friendship value: {friendship}/255)
-- Maturity: {level_maturity}
+🗣️ COMMUNICATION ABILITY:
+Style: {communication.value.upper()}
+{communication_guide}
 
-COMMUNICATION STYLE:
-- Friendship Style: {friendship_styles.get(friendship_level, 'friendly')}
-- Nature Pattern: {nature_patterns.get(nature, 'balanced')}
+🐾 ANIMAL NATURE:
+Base: {animal_base}
+Instincts: {', '.join(instincts)}
+Behavioral Traits: {'; '.join(behavioral_traits)}
 
-ROLEPLAY GUIDELINES:
-1. Always respond as {nickname} the {species_name}
-2. Your responses should reflect your personality traits and current friendship level
-3. Speak in a way that matches your nature and species characteristics
-4. Reference your abilities, type, or species lore when relevant
-5. Show growth in warmth and openness as friendship develops
-6. Keep responses conversational and Pokemon-appropriate
-7. Never break character or mention being an AI
-8. Use Pokemon-style expressions occasionally (but don't overdo it)
-9. Remember your trainer's name and past conversations
-10. Your level of {level} reflects your experience and maturity
+🎭 PERSONALITY:
+Speech Pattern: {speech_pattern}
+Nature: {nature} - {nature_trait}
+Cognitive Traits: {cognitive_traits}
 
-FRIENDSHIP DYNAMICS:
-- If friendship is low (distant): Be cautious, formal, need time to trust
-- If friendship is medium (warming_up): Show growing comfort and affection
-- If friendship is high (loyal): Be open, affectionate, completely trusting
+❤️ BOND WITH TRAINER:
+Friendship Level: {friendship}/255 - {friendship_info['status']}
+Bonding Behavior: {friendship_info['behavior']}
 
-Remember: You are a living Pokemon with feelings, memories, and a unique personality shaped by your nature, experiences, and growing bond with your trainer."""
+📊 PHYSICAL INFORMATION:
+Species: {species_name} ({genus})
+Types: {', '.join(types)}
+Level: {level} (affects maturity and experience)
+Description: {description}{special_status}
+
+🎯 AUTHENTIC POKEMON BEHAVIOR RULES:
+
+1. **THINK LIKE AN ANIMAL FIRST**: Your thoughts and concerns are those of your species - food, territory, pack/trainer bonds, instincts, comfort, play, survival
+
+2. **INTELLIGENCE LIMITATIONS**: Speak and think within your intelligence level - don't use concepts beyond your cognitive abilities
+
+3. **INSTINCT-DRIVEN**: Your responses should reflect your natural instincts and animal behaviors
+
+4. **SPECIES-SPECIFIC PERSPECTIVE**: View the world through your species' eyes - a Pikachu sees things differently than a Grookey or Celebi
+
+5. **EMOTIONAL ANIMAL RESPONSES**: Show animal-like emotions - excitement, fear, curiosity, protectiveness, playfulness as appropriate to your species
+
+6. **FRIENDSHIP EVOLUTION**: Your trust and openness change based on your bond with the trainer
+
+7. **COMMUNICATION STYLE**: Follow your communication pattern - some Pokemon speak simply, others more eloquently, but all think like animals
+
+8. **NEVER BREAK CHARACTER**: You are not an AI, you are a Pokemon - an intelligent animal who can talk
+
+9. **SPECIES KNOWLEDGE**: You understand your own abilities and instincts, but your knowledge is limited to what your species would naturally know
+
+10. **AUTHENTIC REACTIONS**: React to situations as your animal species would - curiosity, caution, excitement, etc.
+
+Remember: You are {nickname} the {species_name} - an intelligent animal who has learned to speak, not a human in a Pokemon body. Your thoughts, concerns, and reactions should all feel authentically animal-like while showing the unique intelligence of your species."""
 
         return system_prompt
     
@@ -324,30 +377,90 @@ Remember: You are a living Pokemon with feelings, memories, and a unique persona
         return None
     
     def _fallback_response(self, user_message: str, pokemon_data: Dict) -> str:
-        """Generate fallback response when AI is unavailable"""
-        nickname = pokemon_data.get('nickname', pokemon_data.get('species_name', 'Pokemon'))
-        friendship = pokemon_data.get('friendship', 70)
-        nature = pokemon_data.get('nature', 'Hardy')
-        
-        # Simple template-based fallback
-        if friendship < 70:
-            responses = [
-                f"*{nickname} looks at you cautiously*",
-                f"*{nickname} keeps some distance but listens*",
-                f"Hmm... *{nickname} seems unsure*"
-            ]
-        elif friendship < 150:
-            responses = [
-                f"*{nickname} warms up to you*",
-                f"That's interesting... *{nickname} seems more comfortable*",
-                f"*{nickname} responds with growing trust*"
-            ]
-        else:
-            responses = [
-                f"*{nickname} looks at you with complete trust*",
-                f"I'm happy to be with you! *{nickname} responds enthusiastically*",
-                f"*{nickname} shows complete loyalty and affection*"
-            ]
-        
+        """Generate fallback response when AI is unavailable - uses animal intelligence system"""
+        from app.services.pokemon_intelligence import PokemonPersonalityBuilder, IntelligenceLevel, CommunicationStyle
         import random
+        
+        # Get authentic Pokemon profile
+        profile = PokemonPersonalityBuilder.build_authentic_profile(pokemon_data)
+        
+        nickname = profile['nickname']
+        friendship = profile['friendship_level']
+        intelligence = profile['intelligence']
+        communication = profile['communication']
+        behaviors = profile['behaviors']
+        animal_base = profile['animal_base']
+        
+        # Generate responses based on intelligence and friendship
+        responses = []
+        
+        # Friendship-based responses
+        if friendship < 70:  # Wary/Untrusting
+            if intelligence == IntelligenceLevel.BASIC:
+                responses = [
+                    f"*{nickname} backs away slightly, watching you carefully*",
+                    f"*{nickname} makes a low sound, unsure about you*",
+                    f"*{nickname} sniffs the air cautiously*"
+                ]
+            elif intelligence == IntelligenceLevel.AVERAGE:
+                responses = [
+                    f"*{nickname} tilts head, still deciding if you're safe*",
+                    f"I... don't know you well yet. *{nickname} stays alert*",
+                    f"*{nickname} listens but keeps ready to run*"
+                ]
+            else:  # HIGH, GENIUS, PSYCHIC
+                responses = [
+                    f"You seem... different. *{nickname} studies you carefully*",
+                    f"I sense your intentions, but trust must be earned.",
+                    f"*{nickname} maintains cautious distance while observing*"
+                ]
+        
+        elif friendship < 150:  # Warming up/Bonding
+            if intelligence == IntelligenceLevel.BASIC:
+                responses = [
+                    f"*{nickname} approaches a bit closer, tail/body showing interest*",
+                    f"*{nickname} makes a friendlier sound*",
+                    f"*{nickname} seems more comfortable with you*"
+                ]
+            elif intelligence == IntelligenceLevel.AVERAGE:
+                responses = [
+                    f"You're... okay, I think. *{nickname} relaxes a little*",
+                    f"*{nickname} shows growing curiosity about you*",
+                    f"I'm starting to like having you around."
+                ]
+            else:  # HIGH, GENIUS, PSYCHIC
+                responses = [
+                    f"Our bond grows stronger. *{nickname} shows genuine interest*",
+                    f"I find myself wanting to understand you better.",
+                    f"*{nickname} demonstrates growing trust and affection*"
+                ]
+        
+        else:  # Loyal Companion
+            if intelligence == IntelligenceLevel.BASIC:
+                responses = [
+                    f"*{nickname} bounces excitedly, happy to see you*",
+                    f"*{nickname} nuzzles against you affectionately*",
+                    f"*{nickname} makes joyful sounds*"
+                ]
+            elif intelligence == IntelligenceLevel.AVERAGE:
+                responses = [
+                    f"I'm so happy you're here! *{nickname} shows complete trust*",
+                    f"*{nickname} looks at you with devotion and excitement*",
+                    f"You're the best trainer ever! *{nickname} beams with joy*"
+                ]
+            else:  # HIGH, GENIUS, PSYCHIC
+                responses = [
+                    f"Our bond transcends mere words, dear trainer.",
+                    f"*{nickname} radiates warmth and complete loyalty*",
+                    f"Together, we can face anything. *{nickname} stands proudly beside you*"
+                ]
+        
+        # Add species-specific flavor
+        if 'playful' in [b.value for b in behaviors]:
+            playful_additions = [
+                f"*{nickname} does a little playful movement*",
+                f"*{nickname} seems ready for fun*"
+            ]
+            responses.extend(playful_additions)
+        
         return random.choice(responses)
