@@ -1,15 +1,45 @@
 import random
+import logging
 from typing import Dict, List
+from app.services.ai_chat_service import AIChatService
+
+logger = logging.getLogger(__name__)
 
 class ChatEngine:
-    """Pokemon personality-based chat response engine"""
+    """Enhanced Pokemon personality-based chat response engine with AI integration"""
     
     def __init__(self):
         self.response_templates = self._load_response_templates()
         self.conversation_context = {}
+        
+        # Initialize AI service for dynamic responses
+        self.ai_service = AIChatService()
+        
+        logger.info(f"Chat engine initialized. AI available: {self.ai_service.is_available()}")
+        if self.ai_service.is_available():
+            logger.info(f"Available AI providers: {[p.value for p in self.ai_service.available_providers]}")
     
     def generate_response(self, pokemon_data: Dict, user_message: str, conversation_history: List = None) -> str:
-        """Generate a personality-appropriate response"""
+        """Generate a personality-appropriate response using AI or templates"""
+        
+        # Try AI-powered response first if available
+        if self.ai_service.is_available():
+            try:
+                ai_response = self.ai_service.generate_pokemon_response(
+                    user_message, pokemon_data, conversation_history
+                )
+                if ai_response and len(ai_response.strip()) > 0:
+                    logger.info(f"Generated AI response for {pokemon_data.get('nickname', 'Pokemon')}")
+                    return ai_response
+            except Exception as e:
+                logger.error(f"AI response generation failed: {e}")
+        
+        # Fallback to template-based responses
+        logger.info(f"Using template-based response for {pokemon_data.get('nickname', 'Pokemon')}")
+        return self._generate_template_response(pokemon_data, user_message, conversation_history)
+    
+    def _generate_template_response(self, pokemon_data: Dict, user_message: str, conversation_history: List = None) -> str:
+        """Generate template-based response (original logic)"""
         personality = pokemon_data.get('personality', {})
         
         # Analyze user message for context

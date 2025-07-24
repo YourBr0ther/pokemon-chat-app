@@ -168,6 +168,7 @@ data/sprites/
 docker-data/
 
 # Environment variables
+.env
 .env.local
 .env.production
 .env.development

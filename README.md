@@ -30,11 +30,14 @@ A beautiful web-based Pokemon chat application that imports Pokemon from .pk8 fi
 - Team management (up to 6 Pokemon)
 - Release Pokemon functionality
 
-### 💬 **Personality-Based Chat**
-- Individual conversations with each Pokemon
-- Personality system based on species, nature, friendship, and level
-- Context-aware responses
-- Chat history preservation
+### 💬 **AI-Powered Personality Chat**
+- **Dynamic AI responses** using ChatGPT or Claude APIs
+- **Personality-driven conversations** based on species, nature, friendship, and level
+- **Friendship evolution** affects response warmth and openness
+- **Nature-based communication** styles (e.g., Timid Pokemon are shy, Jolly Pokemon are upbeat)
+- **Species-specific traits** influence conversation topics and behavior
+- **Context-aware responses** that remember conversation history
+- **Graceful fallbacks** to template responses when AI is unavailable
 - Mobile-responsive chat interface
 
 ### 🌟 **PokeAPI Integration**
@@ -60,6 +63,40 @@ docker compose up --build
 ```
 
 3. Open your browser to `http://localhost:5005`
+
+## 🤖 AI Chat Configuration
+
+To enable AI-powered Pokemon conversations, you'll need API keys from OpenAI or Anthropic:
+
+### Option 1: OpenAI (ChatGPT)
+1. Visit [OpenAI Platform](https://platform.openai.com/api-keys)
+2. Create an API key
+3. Add to your `.env` file:
+```bash
+AI_PROVIDER=openai
+OPENAI_API_KEY=your-openai-api-key-here
+```
+
+### Option 2: Claude (Anthropic)
+1. Visit [Anthropic Console](https://console.anthropic.com/)
+2. Create an API key
+3. Add to your `.env` file:
+```bash
+AI_PROVIDER=claude
+CLAUDE_API_KEY=your-claude-api-key-here
+```
+
+### Configuration Steps
+1. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+2. Edit `.env` and add your API keys
+
+3. Restart the application to enable AI features
+
+**Note**: Without API keys, the app will use template-based responses as a fallback.
 
 ### Manual Setup
 
@@ -196,6 +233,9 @@ python migrate_database.py
 
 ### Test Suite
 ```bash
+# Test AI integration and personality system
+python test_ai_integration.py
+
 # Test PokeAPI integration and database schema
 python test_pokeapi_integration.py
 
@@ -212,6 +252,33 @@ python test_parser.py
 - **Smart duplicate detection** using IV comparison
 - **Error handling** with graceful fallbacks
 - **Generation 8 Pokemon** recognition (810+ species)
+
+### AI Personality System
+The AI creates unique personalities for each Pokemon based on:
+
+**Friendship Level:**
+- **Distant** (0-69): Cautious, formal, keeps responses brief
+- **Warming Up** (70-149): Friendly but careful, gradually opens up  
+- **Loyal** (150-255): Warm, affectionate, completely trusting
+
+**Nature Influence:**
+- **Timid**: Shy and nervous, speaks softly
+- **Jolly**: Cheerful and upbeat responses
+- **Adamant**: Determined and speaks with conviction
+- **Modest**: Humble and understated
+- **And 21 other unique nature personalities**
+
+**Species Traits:**
+- **Celebi**: Gentle and wise, references time travel
+- **Pikachu**: Energetic and electric-themed responses
+- **Grookey**: Musical and rhythm-focused conversations
+- **Each species has unique characteristics**
+
+**Dynamic Conversations:**
+- Responses evolve as friendship grows
+- Pokemon remember previous conversations
+- Personality traits combine for unique interactions
+- Species lore and abilities influence topics
 
 ## 🌐 API Endpoints
 
@@ -243,13 +310,33 @@ Environment variables:
 
 ## 🎯 Features Roadmap
 
-- [ ] Shiny Pokemon detection and display
-- [ ] Move information and battle mechanics
-- [ ] Pokemon evolution chains
-- [ ] Trading system between users
-- [ ] Advanced personality traits
-- [ ] Voice chat integration
-- [ ] Mobile app version
+### ✅ Completed
+- [x] AI-powered chat with ChatGPT/Claude integration
+- [x] Personality-based responses using friendship, nature, and species
+- [x] PokeAPI integration with sprites and detailed information
+- [x] Smart duplicate detection and pk8 parsing
+
+### 🚧 Planned Features
+- [ ] **Enhanced AI Features**
+  - [ ] Conversation memory across sessions
+  - [ ] Emotional state tracking
+  - [ ] Learning from user interactions
+- [ ] **Visual Enhancements**
+  - [ ] Shiny Pokemon detection and display
+  - [ ] Animated sprites and reactions
+  - [ ] Custom Pokemon portraits
+- [ ] **Game Mechanics**
+  - [ ] Move information and battle mechanics
+  - [ ] Pokemon evolution chains
+  - [ ] Experience and level progression
+- [ ] **Social Features**
+  - [ ] Trading system between users
+  - [ ] Multi-user chat rooms
+  - [ ] Pokemon sharing and showcasing
+- [ ] **Advanced Features**
+  - [ ] Voice chat integration
+  - [ ] Mobile app version
+  - [ ] Pokemon breeding system
 
 ## 🌍 Browser Support
 

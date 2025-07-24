@@ -9,6 +9,13 @@ services:
       - FLASK_ENV=production
       - SECRET_KEY=your-secret-key-change-in-production
       - DATABASE_URL=sqlite:///pokemon_chat.db
+      # AI Configuration - Add your API keys here or use .env file
+      - AI_PROVIDER=${AI_PROVIDER:-openai}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    env_file:
+      - .env  # Optional: Load from .env file if it exists
     volumes:
       - pokemon_data:/app/instance
       - pokemon_uploads:/app/instance/uploads
