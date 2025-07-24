@@ -8,18 +8,31 @@ chat_engine = ChatEngine()
 @chat_bp.route('/pokemon/<int:pokemon_id>/messages', methods=['GET'])
 def get_chat_history(pokemon_id):
     """Get chat history for a Pokemon"""
+    import logging
+    logger = logging.getLogger(__name__)
+    
     try:
         pokemon = Pokemon.query.get_or_404(pokemon_id)
+        logger.info(f"Loading chat history for Pokemon ID {pokemon_id}: {pokemon.nickname}")
+        
         messages = ChatMessage.query.filter_by(pokemon_id=pokemon_id).order_by(ChatMessage.timestamp).all()
+        logger.info(f"Found {len(messages)} messages for {pokemon.nickname}")
+        
+        # Convert pokemon to dict with error handling
+        pokemon_dict = pokemon.to_dict()
+        logger.info(f"Successfully converted Pokemon {pokemon.nickname} to dict")
         
         return jsonify({
             'success': True,
-            'pokemon': pokemon.to_dict(),
+            'pokemon': pokemon_dict,
             'messages': [msg.to_dict() for msg in messages]
         })
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        logger.error(f"Error loading chat history for Pokemon ID {pokemon_id}: {str(e)}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return jsonify({'error': f'Failed to load Pokemon chat: {str(e)}'}), 500
 
 @chat_bp.route('/pokemon/<int:pokemon_id>/send', methods=['POST'])
 def send_message(pokemon_id):

@@ -150,7 +150,7 @@ class Pokemon(db.Model):
             'capture_rate': self.capture_rate,
             'is_legendary': self.is_legendary,
             'is_mythical': self.is_mythical,
-            'habitat': self.habitat,
+            'habitat': self.habitat or 'unknown',
             'pokemon_color': self.pokemon_color,
             'abilities': self.get_abilities(),
             'base_stats': self.get_base_stats()
