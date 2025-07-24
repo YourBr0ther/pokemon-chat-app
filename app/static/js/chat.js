@@ -74,6 +74,8 @@ function showEmptyTeam() {
 
 async function selectPokemon(pokemonId) {
     try {
+        console.log('Selecting Pokemon with ID:', pokemonId);
+        
         // Update UI to show selected Pokemon
         const teamMembers = document.querySelectorAll('.team-member');
         teamMembers.forEach(member => {
@@ -84,25 +86,41 @@ async function selectPokemon(pokemonId) {
         });
         
         // Load Pokemon data and chat history
+        console.log('Making API request to:', `/api/pokemon/${pokemonId}/messages`);
         const response = await apiRequest(`/api/pokemon/${pokemonId}/messages`);
+        console.log('API response received:', response);
+        
+        if (!response || !response.pokemon) {
+            throw new Error('Invalid response format - missing pokemon data');
+        }
+        
         currentPokemon = response.pokemon;
+        console.log('Current Pokemon set to:', currentPokemon.nickname);
         
         // Update chat header
         updateChatHeader();
         
         // Display chat history
-        displayMessages(response.messages);
+        displayMessages(response.messages || []);
         
         // Show chat input
-        document.getElementById('chat-input-container').style.display = 'flex';
-        document.getElementById('clear-chat-btn').style.display = 'inline-block';
-        document.getElementById('chat-welcome').classList.add('hidden');
+        const chatInputContainer = document.getElementById('chat-input-container');
+        const clearChatBtn = document.getElementById('clear-chat-btn');
+        const chatWelcome = document.getElementById('chat-welcome');
+        
+        if (chatInputContainer) chatInputContainer.style.display = 'flex';
+        if (clearChatBtn) clearChatBtn.style.display = 'inline-block';
+        if (chatWelcome) chatWelcome.classList.add('hidden');
         
         // Focus message input
-        document.getElementById('message-input').focus();
+        const messageInput = document.getElementById('message-input');
+        if (messageInput) messageInput.focus();
+        
+        console.log('Pokemon selection completed successfully');
         
     } catch (error) {
-        showNotification('Failed to load Pokemon chat', 'error');
+        console.error('Error in selectPokemon:', error);
+        showNotification(`Failed to load Pokemon chat: ${error.message}`, 'error');
     }
 }
 
@@ -112,6 +130,11 @@ function updateChatHeader() {
     const nameElement = document.getElementById('current-pokemon-name');
     const detailsElement = document.getElementById('current-pokemon-details');
     const spriteElement = document.getElementById('current-pokemon-sprite');
+    
+    if (!nameElement || !detailsElement) {
+        console.error('Chat header elements not found');
+        return;
+    }
     
     nameElement.textContent = `${currentPokemon.nickname} (${currentPokemon.species_name})`;
     
