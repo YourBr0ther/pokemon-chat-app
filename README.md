@@ -50,7 +50,7 @@ A beautiful web-based Pokemon chat application that imports Pokemon from .pk8 fi
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourbr0ther/pokemon-chat-app.git
+git clone git@github.com:YourBr0ther/pokemon-chat-app.git
 cd pokemon-chat-app
 ```
 
@@ -168,7 +168,7 @@ pokemon-chat-app/
 ### Local Development Setup
 ```bash
 # Clone the repository
-git clone https://github.com/yourbr0ther/pokemon-chat-app.git
+git clone git@github.com:YourBr0ther/pokemon-chat-app.git
 cd pokemon-chat-app
 
 # Create virtual environment
