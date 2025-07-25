@@ -740,7 +740,30 @@ a:hover {
   height: calc(100vh - 120px);
   max-width: 1400px;
   margin: 0 auto;
+  position: relative;
+  transition: background var(--transition-slow);
+  padding: var(--space-lg);
 }
+
+/* Type-based chat container themes */
+.chat-container[data-pokemon-type="fire"] { background: radial-gradient(ellipse at top right, rgba(255, 107, 53, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="water"] { background: radial-gradient(ellipse at bottom left, rgba(79, 195, 247, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="grass"] { background: radial-gradient(ellipse at center, rgba(102, 187, 106, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="electric"] { background: radial-gradient(ellipse at top left, rgba(255, 235, 59, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="psychic"] { background: radial-gradient(ellipse at center, rgba(233, 30, 99, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="ice"] { background: radial-gradient(ellipse at bottom, rgba(129, 212, 250, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="dragon"] { background: radial-gradient(ellipse at top, rgba(124, 77, 255, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="dark"] { background: radial-gradient(ellipse at center, rgba(109, 76, 65, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="fairy"] { background: radial-gradient(ellipse at bottom right, rgba(248, 187, 217, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="fighting"] { background: radial-gradient(ellipse at left, rgba(211, 47, 47, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="poison"] { background: radial-gradient(ellipse at right, rgba(156, 39, 176, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="ground"] { background: radial-gradient(ellipse at bottom, rgba(215, 204, 200, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="flying"] { background: radial-gradient(ellipse at top, rgba(179, 157, 219, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="bug"] { background: radial-gradient(ellipse at center, rgba(139, 195, 74, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="rock"] { background: radial-gradient(ellipse at bottom left, rgba(188, 170, 164, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="ghost"] { background: radial-gradient(ellipse at center, rgba(121, 134, 203, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="steel"] { background: radial-gradient(ellipse at top right, rgba(176, 190, 197, 0.1), transparent 50%); }
+.chat-container[data-pokemon-type="normal"] { background: radial-gradient(ellipse at center, rgba(189, 189, 189, 0.1), transparent 50%); }
 
 /* Chat Sidebar - Team Pokemon */
 .chat-sidebar {
@@ -910,6 +933,85 @@ a:hover {
   display: flex;
   align-items: center;
   gap: var(--space-lg);
+  position: relative;
+  z-index: 1;
+}
+
+.chat-pokemon-sprite {
+  width: 80px;
+  height: 80px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 3px solid rgba(203, 213, 225, 0.1);
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.chat-pokemon-sprite::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: var(--radius-full);
+  padding: 3px;
+  background: var(--pokemon-type-gradient, linear-gradient(135deg, var(--primary-blue), var(--primary-purple)));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.chat-pokemon-sprite:hover::after {
+  opacity: 0.8;
+}
+
+.chat-pokemon-sprite img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Friendship level indicators */
+.chat-pokemon-sprite.friendship-low {
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+.chat-pokemon-sprite.friendship-medium {
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+.chat-pokemon-sprite.friendship-high {
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+}
+
+.chat-pokemon-sprite.friendship-high::after {
+  opacity: 0.3;
+}
+
+.chat-pokemon-sprite.friendship-high:hover::after {
+  opacity: 1;
+}
+
+.chat-pokemon-sprite.friendship-high img {
+  animation: breathe 3s ease-in-out infinite, sparkle 6s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) brightness(1); }
+  50% { filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.5)) brightness(1.1); }
 }
 
 .chat-pokemon-sprite {
@@ -947,11 +1049,11 @@ a:hover {
 /* Chat Messages Area */
 .chat-messages {
   flex: 1;
-  padding: var(--space-lg);
+  padding: var(--space-xl);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 0;
   scroll-behavior: smooth;
 }
 
@@ -997,9 +1099,15 @@ a:hover {
   padding: var(--space-md) var(--space-lg);
   border-radius: var(--radius-lg);
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
   animation: messageSlideIn 0.3s ease-out;
   word-wrap: break-word;
+  margin-bottom: var(--space-lg);
+  overflow-wrap: break-word;
+}
+
+.message:last-child {
+  margin-bottom: 0;
 }
 
 @keyframes messageSlideIn {
@@ -1025,9 +1133,75 @@ a:hover {
   align-self: flex-start;
   background: var(--card-hover);
   color: var(--text-primary);
+  border-radius: var(--radius-lg);
   border-bottom-left-radius: var(--radius-sm);
   border: 1px solid rgba(203, 213, 225, 0.1);
   position: relative;
+  transition: all var(--transition-normal);
+  overflow: visible;
+}
+
+/* Type-based message styling */
+.message.pokemon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--pokemon-type-gradient, transparent);
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* Nature-based message variations */
+.message.pokemon[data-nature="bold"],
+.message.pokemon[data-nature="brave"] {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.message.pokemon[data-nature="timid"],
+.message.pokemon[data-nature="quiet"] {
+  font-size: 0.95em;
+  opacity: 0.95;
+}
+
+.message.pokemon[data-nature="jolly"],
+.message.pokemon[data-nature="naive"] {
+  background: linear-gradient(135deg, var(--card-hover), rgba(255, 235, 59, 0.05));
+}
+
+.message.pokemon[data-nature="serious"],
+.message.pokemon[data-nature="modest"] {
+  border-left: 3px solid var(--primary-blue);
+  padding-left: calc(var(--space-lg) + 3px);
+}
+
+/* Friendship-based message glow */
+.message.pokemon.friendship-high {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.message.pokemon.friendship-medium {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+}
+
+/* Animated message entrance */
+.message.pokemon {
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .message.pokemon::before {
@@ -1112,6 +1286,19 @@ a:hover {
   color: var(--text-muted);
   font-style: italic;
   animation: fadeIn 0.3s ease-in;
+  position: relative;
+}
+
+.typing-indicator::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--pokemon-type-gradient, var(--primary-blue));
+  opacity: 0.5;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes fadeIn {
@@ -1130,6 +1317,17 @@ a:hover {
   border-radius: var(--radius-full);
   background: var(--primary-blue);
   animation: typingBounce 1.4s ease-in-out infinite;
+  position: relative;
+}
+
+.typing-dots span::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius-full);
+  background: var(--pokemon-type-gradient, var(--primary-blue));
+  opacity: 0.3;
+  filter: blur(4px);
 }
 
 .typing-dots span:nth-child(2) { animation-delay: 0.2s; }

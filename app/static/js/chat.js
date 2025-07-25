@@ -3,6 +3,28 @@
 let currentPokemon = null;
 let currentTeam = [];
 
+// Type gradient mappings
+const typeGradients = {
+    fire: 'linear-gradient(135deg, #FF6B35, #F7931E)',
+    water: 'linear-gradient(135deg, #4FC3F7, #29B6F6)',
+    grass: 'linear-gradient(135deg, #66BB6A, #4CAF50)',
+    electric: 'linear-gradient(135deg, #FFEB3B, #FFC107)',
+    psychic: 'linear-gradient(135deg, #E91E63, #9C27B0)',
+    ice: 'linear-gradient(135deg, #81D4FA, #4FC3F7)',
+    dragon: 'linear-gradient(135deg, #7C4DFF, #3F51B5)',
+    dark: 'linear-gradient(135deg, #6D4C41, #3E2723)',
+    fairy: 'linear-gradient(135deg, #F8BBD9, #E1BEE7)',
+    fighting: 'linear-gradient(135deg, #D32F2F, #B71C1C)',
+    poison: 'linear-gradient(135deg, #9C27B0, #7B1FA2)',
+    ground: 'linear-gradient(135deg, #D7CCC8, #A1887F)',
+    flying: 'linear-gradient(135deg, #B39DDB, #9575CD)',
+    bug: 'linear-gradient(135deg, #8BC34A, #689F38)',
+    rock: 'linear-gradient(135deg, #BCAAA4, #8D6E63)',
+    ghost: 'linear-gradient(135deg, #7986CB, #5C6BC0)',
+    steel: 'linear-gradient(135deg, #B0BEC5, #90A4AE)',
+    normal: 'linear-gradient(135deg, #BDBDBD, #9E9E9E)'
+};
+
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
     loadTeam();
@@ -142,6 +164,9 @@ function updateChatHeader() {
     if (currentPokemon.genus) {
         detailsText = `${currentPokemon.genus} • ${detailsText}`;
     }
+    
+    // Apply type-based theming
+    applyPokemonTheme();
     detailsElement.textContent = detailsText;
     
     // Update sprite if element exists
@@ -168,14 +193,56 @@ function displayMessages(messages) {
         return;
     }
     
-    chatMessages.innerHTML = messages.map(message => `
-        <div class="message ${message.sender}">
-            ${message.message}
-        </div>
-    `).join('');
+    chatMessages.innerHTML = messages.map(message => {
+        if (message.sender === 'user') {
+            return `<div class="message user">${message.message}</div>`;
+        } else {
+            // Add nature and friendship data for Pokemon messages
+            const nature = currentPokemon?.nature?.toLowerCase() || '';
+            const friendshipLevel = getFriendshipLevel(currentPokemon?.friendship || 0);
+            
+            return `
+                <div class="message pokemon friendship-${friendshipLevel}" 
+                     data-nature="${nature}">
+                    ${message.message}
+                </div>
+            `;
+        }
+    }).join('');
     
     // Scroll to bottom
     scrollToBottom();
+}
+
+function applyPokemonTheme() {
+    if (!currentPokemon || !currentPokemon.types || currentPokemon.types.length === 0) return;
+    
+    const primaryType = currentPokemon.types[0].toLowerCase();
+    const chatContainer = document.querySelector('.chat-container');
+    const chatHeader = document.querySelector('.chat-header');
+    const chatSprite = document.querySelector('.chat-pokemon-sprite');
+    
+    // Set type attribute for CSS styling
+    if (chatContainer) {
+        chatContainer.setAttribute('data-pokemon-type', primaryType);
+    }
+    
+    // Apply type gradient as CSS variable
+    const gradient = typeGradients[primaryType] || typeGradients.normal;
+    document.documentElement.style.setProperty('--pokemon-type-gradient', gradient);
+    
+    // Add friendship-based glow intensity
+    const friendshipLevel = getFriendshipLevel(currentPokemon.friendship);
+    if (chatSprite) {
+        chatSprite.classList.remove('friendship-low', 'friendship-medium', 'friendship-high');
+        chatSprite.classList.add(`friendship-${friendshipLevel}`);
+    }
+}
+
+function getFriendshipLevel(friendship) {
+    if (friendship < 70) return 'low';
+    if (friendship < 150) return 'medium';
+    return 'high';
 }
 
 async function sendMessage(event) {
@@ -258,7 +325,22 @@ function showTypingIndicator() {
     const pokemonName = document.getElementById('typing-pokemon');
     
     if (currentPokemon) {
-        pokemonName.textContent = `${currentPokemon.nickname} is typing...`;
+        // Customize typing message based on nature
+        const nature = currentPokemon.nature?.toLowerCase() || '';
+        let typingMessage = `${currentPokemon.nickname} is typing...`;
+        
+        // Nature-based typing variations
+        if (['timid', 'quiet'].includes(nature)) {
+            typingMessage = `${currentPokemon.nickname} is thinking...`;
+        } else if (['bold', 'brave', 'adamant'].includes(nature)) {
+            typingMessage = `${currentPokemon.nickname} is responding...`;
+        } else if (['jolly', 'naive'].includes(nature)) {
+            typingMessage = `${currentPokemon.nickname} is excited to reply...`;
+        } else if (['calm', 'gentle'].includes(nature)) {
+            typingMessage = `${currentPokemon.nickname} is composing a thoughtful response...`;
+        }
+        
+        pokemonName.textContent = typingMessage;
     }
     
     indicator.classList.remove('hidden');
