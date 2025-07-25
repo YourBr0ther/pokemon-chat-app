@@ -29,6 +29,9 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
+    <!-- CSRF Token for AJAX requests -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     <!-- Preload critical resources -->
     <link rel="preload" href="{{ url_for('static', filename='js/common.js') }}" as="script">
 </head>

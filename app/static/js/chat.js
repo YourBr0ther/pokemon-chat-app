@@ -3,6 +3,73 @@
 let currentPokemon = null;
 let currentTeam = [];
 
+// Safe DOM manipulation functions
+function createPokemonTeamElement(teamMember) {
+    const pokemon = teamMember.pokemon;
+    const spriteUrl = pokemon.best_sprite || pokemon.sprite_url || 
+                     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.species_id}.png`;
+    
+    const teamMemberDiv = document.createElement('div');
+    teamMemberDiv.className = 'team-member mobile-touch-target';
+    teamMemberDiv.dataset.pokemonId = pokemon.id;
+    teamMemberDiv.onclick = () => selectPokemon(pokemon.id);
+    
+    const spriteImg = document.createElement('img');
+    spriteImg.src = spriteUrl;
+    spriteImg.alt = escapeHTML(pokemon.nickname || pokemon.species_name);
+    spriteImg.className = 'team-sprite';
+    spriteImg.onerror = function() { this.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.species_id}.png`; };
+    
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'team-info';
+    
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'team-name';
+    nameDiv.textContent = pokemon.nickname || pokemon.species_name;
+    
+    const levelDiv = document.createElement('div');
+    levelDiv.className = 'team-level';
+    levelDiv.textContent = `Level ${pokemon.level}`;
+    
+    // Add special badges safely
+    if (pokemon.is_legendary) {
+        const badge = document.createElement('span');
+        badge.className = 'mini-badge legendary';
+        badge.textContent = '⭐';
+        nameDiv.appendChild(badge);
+    } else if (pokemon.is_mythical) {
+        const badge = document.createElement('span');
+        badge.className = 'mini-badge mythical';
+        badge.textContent = '✨';
+        nameDiv.appendChild(badge);
+    }
+    
+    infoDiv.appendChild(nameDiv);
+    infoDiv.appendChild(levelDiv);
+    teamMemberDiv.appendChild(spriteImg);
+    teamMemberDiv.appendChild(infoDiv);
+    
+    return teamMemberDiv;
+}
+
+function createChatMessageElement(message) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${message.is_user ? 'user' : 'pokemon'}`;
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.textContent = message.content; // Safe text content
+    
+    const timeDiv = document.createElement('div');
+    timeDiv.className = 'message-time';
+    timeDiv.textContent = new Date(message.timestamp).toLocaleTimeString();
+    
+    messageDiv.appendChild(contentDiv);
+    messageDiv.appendChild(timeDiv);
+    
+    return messageDiv;
+}
+
 // Type gradient mappings
 const typeGradients = {
     fire: 'linear-gradient(135deg, #FF6B35, #F7931E)',
@@ -223,34 +290,14 @@ function displayTeam() {
     
     sidebarEmpty.classList.add('hidden');
     
-    teamList.innerHTML = currentTeam.map(teamMember => {
-        const pokemon = teamMember.pokemon;
-        const spriteUrl = pokemon.best_sprite || pokemon.sprite_url || 
-                         `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.species_id}.png`;
-        
-        let specialBadge = '';
-        if (pokemon.is_legendary) {
-            specialBadge = '<span class="mini-badge legendary">⭐</span>';
-        } else if (pokemon.is_mythical) {
-            specialBadge = '<span class="mini-badge mythical">✨</span>';
-        }
-        
-        return `
-            <div class="team-member mobile-touch-target" onclick="selectPokemon(${pokemon.id})" data-pokemon-id="${pokemon.id}">
-                <div class="member-sprite">
-                    <img src="${spriteUrl}" alt="${pokemon.species_name}" class="member-sprite-img" 
-                         onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.species_id}.png'">
-                    ${specialBadge}
-                </div>
-                <div class="member-info">
-                    <div class="member-name">${pokemon.nickname}</div>
-                    <div class="member-species">${pokemon.species_name}</div>
-                    ${pokemon.genus ? `<div class="member-genus">${pokemon.genus}</div>` : ''}
-                    <div class="member-level">Level ${pokemon.level}</div>
-                </div>
-            </div>
-        `;
-    }).join('');
+    // Clear existing content safely  
+    teamList.innerHTML = '';
+    
+    // Use safe DOM creation instead of innerHTML
+    currentTeam.forEach(teamMember => {
+        const teamElement = createPokemonTeamElement(teamMember);
+        teamList.appendChild(teamElement);
+    });
     
     // Add touch feedback to team members
     const teamMembers = document.querySelectorAll('.team-member');
@@ -376,22 +423,25 @@ function displayMessages(messages) {
         return;
     }
     
-    chatMessages.innerHTML = messages.map(message => {
-        if (message.sender === 'user') {
-            return `<div class="message user">${message.message}</div>`;
-        } else {
+    // Clear existing messages safely
+    chatMessages.innerHTML = '';
+    
+    // Create messages using safe DOM methods
+    messages.forEach(message => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = message.sender === 'user' ? 'message user' : 'message pokemon';
+        
+        if (message.sender !== 'user') {
             // Add nature and friendship data for Pokemon messages
             const nature = currentPokemon?.nature?.toLowerCase() || '';
             const friendshipLevel = getFriendshipLevel(currentPokemon?.friendship || 0);
-            
-            return `
-                <div class="message pokemon friendship-${friendshipLevel}" 
-                     data-nature="${nature}">
-                    ${message.message}
-                </div>
-            `;
+            messageDiv.classList.add(`friendship-${friendshipLevel}`);
+            messageDiv.dataset.nature = nature;
         }
-    }).join('');
+        
+        messageDiv.textContent = message.message; // Safe text content
+        chatMessages.appendChild(messageDiv);
+    });
     
     // Scroll to bottom
     scrollToBottom();

@@ -1,5 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from dotenv import load_dotenv
 import os
 import logging
@@ -18,11 +21,18 @@ def create_app():
     )
     
     # Configuration
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+    secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+    if secret_key == 'dev-secret-key-change-in-production' and os.environ.get('FLASK_ENV') == 'production':
+        raise ValueError("SECRET_KEY must be set to a secure value in production!")
+    
+    app.config['SECRET_KEY'] = secret_key
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///pokemon_chat.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB max file size
     app.config['UPLOAD_FOLDER'] = os.path.join(app.instance_path, 'uploads')
+    
+    # Security Configuration
+    app.config['WTF_CSRF_TIME_LIMIT'] = 3600  # 1 hour CSRF token expiry
     
     # AI Configuration (stored in config for reference)
     app.config['AI_PROVIDER'] = os.environ.get('AI_PROVIDER', 'openai')
@@ -36,6 +46,13 @@ def create_app():
     # Initialize extensions
     from app.models.pokemon import db
     db.init_app(app)
+    
+    # Initialize CSRF protection
+    csrf = CSRFProtect(app)
+    
+    # Initialize rate limiting
+    from app.extensions import limiter
+    limiter.init_app(app)
     
     # Register blueprints
     from app.api.import_routes import import_bp

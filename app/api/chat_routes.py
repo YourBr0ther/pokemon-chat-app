@@ -1,11 +1,15 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
+from flask_wtf.csrf import validate_csrf
 from app.models.pokemon import db, Pokemon, ChatMessage, TeamMember
 from app.personality.chat_engine import ChatEngine
+from app.schemas import ChatMessageSchema, validate_json_input, sanitize_html_content
+from app.extensions import limiter
 
 chat_bp = Blueprint('chat', __name__)
 chat_engine = ChatEngine()
 
 @chat_bp.route('/pokemon/<int:pokemon_id>/messages', methods=['GET'])
+@limiter.limit("30 per minute")  # Allow frequent message checking
 def get_chat_history(pokemon_id):
     """Get chat history for a Pokemon"""
     import logging
@@ -35,14 +39,27 @@ def get_chat_history(pokemon_id):
         return jsonify({'error': f'Failed to load Pokemon chat: {str(e)}'}), 500
 
 @chat_bp.route('/pokemon/<int:pokemon_id>/send', methods=['POST'])
+@limiter.limit("20 per minute")  # Prevent chat spam while allowing normal conversation
 def send_message(pokemon_id):
-    """Send message to Pokemon and get response"""
+    """Send message to Pokemon and get response with validation"""
     try:
+        # Validate CSRF token
+        try:
+            validate_csrf(request.headers.get('X-CSRFToken'))
+        except Exception as e:
+            current_app.logger.warning(f"CSRF validation failed: {str(e)}")
+            return jsonify({'error': 'CSRF token missing or invalid'}), 403
+            
         data = request.get_json()
-        user_message = data.get('message', '').strip()
         
-        if not user_message:
-            return jsonify({'error': 'Message cannot be empty'}), 400
+        # Validate input using schema
+        is_valid, validated_data = validate_json_input(ChatMessageSchema, data)
+        if not is_valid:
+            return jsonify({'error': 'Invalid message data', 'details': validated_data}), 400
+        
+        user_message = validated_data['message'].strip()
+        # Additional sanitization
+        user_message = sanitize_html_content(user_message)
         
         pokemon = Pokemon.query.get_or_404(pokemon_id)
         

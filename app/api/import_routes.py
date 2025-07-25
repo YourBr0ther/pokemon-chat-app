@@ -1,8 +1,11 @@
 from flask import Blueprint, request, jsonify, current_app
+from flask_wtf.csrf import validate_csrf
 from werkzeug.utils import secure_filename
 import os
 from app.parsers.pk8_parser import PK8Parser
 from app.models.pokemon import db, Pokemon
+from app.schemas import PokemonSaveSchema, validate_json_input, sanitize_html_content
+from app.extensions import limiter
 
 import_bp = Blueprint('import', __name__)
 
@@ -11,10 +14,46 @@ ALLOWED_EXTENSIONS = {'pk8'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@import_bp.route('/upload', methods=['POST'])
-def upload_pk8_file():
-    """Upload and parse PK8 file"""
+def validate_pk8_file_content(filepath):
+    """Validate PK8 file content using magic bytes and structure"""
     try:
+        # Get file size
+        file_size = os.path.getsize(filepath)
+        
+        # PK8 files should be between 300-400 bytes
+        if not (300 <= file_size <= 400):
+            return False, f"Invalid file size: {file_size} bytes. PK8 files should be 300-400 bytes."
+        
+        # Read first few bytes to check structure
+        with open(filepath, 'rb') as f:
+            header = f.read(32)
+            
+        # Basic validation - check if it looks like encrypted/binary data
+        if len(header) < 32:
+            return False, "File too small to be a valid PK8 file"
+            
+        # PK8 files are encrypted binary data, should have varied byte values
+        unique_bytes = len(set(header))
+        if unique_bytes < 10:  # If too few unique bytes, probably not a real PK8
+            return False, "File doesn't appear to be a valid PK8 format"
+            
+        return True, "Valid PK8 file"
+        
+    except Exception as e:
+        return False, f"File validation error: {str(e)}"
+
+@import_bp.route('/upload', methods=['POST'])
+@limiter.limit("5 per minute")  # Stricter limit for file uploads
+def upload_pk8_file():
+    """Upload and parse PK8 file with security validation"""
+    filepath = None
+    try:
+        # Validate CSRF token
+        try:
+            validate_csrf(request.headers.get('X-CSRFToken'))
+        except Exception:
+            return jsonify({'error': 'CSRF token missing or invalid'}), 403
+            
         if 'file' not in request.files:
             return jsonify({'error': 'No file provided'}), 400
         
@@ -30,10 +69,22 @@ def upload_pk8_file():
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
+        # Validate file content
+        is_valid, validation_message = validate_pk8_file_content(filepath)
+        if not is_valid:
+            os.remove(filepath)
+            return jsonify({'error': f'Invalid PK8 file: {validation_message}'}), 400
+        
         # Parse PK8 file
         parser = PK8Parser()
         pokemon_data = parser.parse_file(filepath)
         personality_traits = parser.get_personality_traits(pokemon_data)
+        
+        # Sanitize output data
+        if 'nickname' in pokemon_data:
+            pokemon_data['nickname'] = sanitize_html_content(pokemon_data['nickname'])
+        if 'trainer_name' in pokemon_data:
+            pokemon_data['trainer_name'] = sanitize_html_content(pokemon_data['trainer_name'])
         
         # Clean up temporary file
         os.remove(filepath)
@@ -47,15 +98,23 @@ def upload_pk8_file():
         
     except Exception as e:
         # Clean up file if it exists
-        if 'filepath' in locals() and os.path.exists(filepath):
+        if filepath and os.path.exists(filepath):
             os.remove(filepath)
         
-        return jsonify({'error': str(e)}), 500
+        current_app.logger.error(f"File upload error: {str(e)}")
+        return jsonify({'error': 'File processing failed. Please try again.'}), 500
 
 @import_bp.route('/save', methods=['POST'])
+@limiter.limit("10 per minute")  # Reasonable limit for saving Pokemon
 def save_pokemon():
-    """Save parsed Pokemon data to database"""
+    """Save parsed Pokemon data to database with validation"""
     try:
+        # Validate CSRF token
+        try:
+            validate_csrf(request.headers.get('X-CSRFToken'))
+        except Exception:
+            return jsonify({'error': 'CSRF token missing or invalid'}), 403
+            
         data = request.get_json()
         
         if not data or 'pokemon_data' not in data:

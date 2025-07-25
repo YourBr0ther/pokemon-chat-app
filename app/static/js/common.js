@@ -1,9 +1,38 @@
 // Common JavaScript utilities
 
+// Security functions
+function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
+function sanitizeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+// Configure default AJAX headers
+function setupAjaxDefaults() {
+    // Set up default headers for all AJAX requests
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options = {}) {
+        options.headers = options.headers || {};
+        options.headers['X-CSRFToken'] = getCSRFToken();
+        options.headers['Content-Type'] = options.headers['Content-Type'] || 'application/json';
+        return originalFetch(url, options);
+    };
+}
+
 // Show notification
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
-    notification.textContent = message;
+    notification.textContent = sanitizeHTML(message); // Sanitize notification messages
     notification.className = `notification ${type}`;
     notification.classList.remove('hidden');
     
@@ -23,11 +52,12 @@ function setLoading(elementId, isLoading) {
     }
 }
 
-// Format Pokemon types
+// Format Pokemon types (safely)
 function formatTypes(types) {
-    return types.map(type => 
-        `<span class="type-badge type-${type.toLowerCase()}">${type}</span>`
-    ).join(' ');
+    return types.map(type => {
+        const sanitizedType = escapeHTML(type);
+        return `<span class="type-badge type-${sanitizedType.toLowerCase()}">${sanitizedType}</span>`;
+    }).join(' ');
 }
 
 // Format Pokemon stats
@@ -603,6 +633,7 @@ function handlePWAState() {
 
 // Initialize common functionality
 document.addEventListener('DOMContentLoaded', () => {
+    setupAjaxDefaults(); // Setup CSRF protection for all AJAX requests
     setActiveNavLink();
     handlePWAState();
     
