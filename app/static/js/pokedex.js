@@ -3,6 +3,31 @@
 let allPokemon = [];
 let currentTeam = [];
 
+// Get type gradient for backgrounds
+function getTypeGradient(type) {
+    const typeGradients = {
+        fire: 'linear-gradient(135deg, #FF6B35, #F7931E)',
+        water: 'linear-gradient(135deg, #4FC3F7, #29B6F6)',
+        grass: 'linear-gradient(135deg, #66BB6A, #4CAF50)',
+        electric: 'linear-gradient(135deg, #FFEB3B, #FFC107)',
+        psychic: 'linear-gradient(135deg, #E91E63, #9C27B0)',
+        ice: 'linear-gradient(135deg, #81D4FA, #4FC3F7)',
+        dragon: 'linear-gradient(135deg, #7C4DFF, #3F51B5)',
+        dark: 'linear-gradient(135deg, #6D4C41, #3E2723)',
+        fairy: 'linear-gradient(135deg, #F8BBD9, #E1BEE7)',
+        fighting: 'linear-gradient(135deg, #D32F2F, #B71C1C)',
+        poison: 'linear-gradient(135deg, #9C27B0, #7B1FA2)',
+        ground: 'linear-gradient(135deg, #D7CCC8, #A1887F)',
+        flying: 'linear-gradient(135deg, #B39DDB, #9575CD)',
+        bug: 'linear-gradient(135deg, #8BC34A, #689F38)',
+        rock: 'linear-gradient(135deg, #BCAAA4, #8D6E63)',
+        ghost: 'linear-gradient(135deg, #7986CB, #5C6BC0)',
+        steel: 'linear-gradient(135deg, #B0BEC5, #90A4AE)',
+        normal: 'linear-gradient(135deg, #BDBDBD, #9E9E9E)'
+    };
+    return typeGradients[type.toLowerCase()] || typeGradients.normal;
+}
+
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
     loadPokemon();
@@ -104,18 +129,33 @@ function displayTeam() {
         
         if (teamMember && teamMember.pokemon) {
             const p = teamMember.pokemon;
+            const spriteUrl = p.best_sprite || p.sprite_url || 
+                             `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.species_id}.png`;
+            
+            // Get primary type for background
+            const primaryType = p.types[0] ? p.types[0].toLowerCase() : 'normal';
+            const typeGradient = getTypeGradient(primaryType);
+            
             slots.push(`
-                <div class="team-slot filled" onclick="showPokemonDetails(${p.id})">
+                <div class="team-slot filled type-${primaryType}" onclick="showPokemonDetails(${p.id})">
                     <div class="slot-number">#${i}</div>
+                    <div class="pokemon-sprite-container">
+                        <img src="${spriteUrl}" alt="${p.nickname}" class="pokemon-sprite"
+                             onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.species_id}.png'">
+                    </div>
                     <div class="pokemon-name">${p.nickname}</div>
                     <div class="pokemon-level">Lv.${p.level}</div>
+                    <div class="pokemon-types">${formatTypes(p.types)}</div>
                 </div>
             `);
         } else {
             slots.push(`
                 <div class="team-slot">
                     <div class="slot-number">#${i}</div>
-                    <div>Empty</div>
+                    <div class="team-slot-empty">
+                        <div class="team-slot-empty-icon">➕</div>
+                        <div class="team-slot-empty-text">Empty</div>
+                    </div>
                 </div>
             `);
         }

@@ -34,15 +34,18 @@ function formatTypes(types) {
 function formatStats(ivs) {
     const statNames = {
         hp: 'HP',
-        attack: 'Att',
-        defense: 'Def',
-        sp_attack: 'SpA',
-        sp_defense: 'SpD',
-        speed: 'Spe'
+        attack: 'Attack',
+        defense: 'Defense',
+        sp_attack: 'Sp. Att',
+        sp_defense: 'Sp. Def',
+        speed: 'Speed'
     };
     
     return Object.entries(ivs).map(([stat, value]) => 
-        `<div class="stat"><strong>${statNames[stat]}:</strong> ${value}</div>`
+        `<div class="stat">
+            <div class="stat-name">${statNames[stat]}</div>
+            <div class="stat-value">${value}</div>
+        </div>`
     ).join('');
 }
 
