@@ -35,7 +35,171 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pokemonId) {
         setTimeout(() => selectPokemon(parseInt(pokemonId)), 500);
     }
+    
+    // Initialize mobile gestures
+    initializeMobileGestures();
+    
+    // Setup mobile/desktop responsive behavior
+    setupResponsiveLayout();
 });
+
+// Mobile gesture support
+function initializeMobileGestures() {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    
+    // Swipe down to open drawer from chat header
+    const chatHeader = document.getElementById('chat-header');
+    if (chatHeader) {
+        chatHeader.addEventListener('touchstart', (e) => {
+            if (window.innerWidth > 968) return; // Only on mobile
+            
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+        
+        chatHeader.addEventListener('touchend', (e) => {
+            if (window.innerWidth > 968) return; // Only on mobile
+            
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleHeaderSwipeGesture();
+        }, { passive: true });
+    }
+    
+    function handleHeaderSwipeGesture() {
+        const swipeThreshold = 80;
+        const verticalDistance = touchEndY - touchStartY;
+        const horizontalDistance = Math.abs(touchStartX - touchEndX);
+        
+        // Swipe down gesture to open team drawer
+        if (verticalDistance > swipeThreshold && horizontalDistance < verticalDistance) {
+            const sidebar = document.getElementById('chat-sidebar');
+            if (sidebar && !sidebar.classList.contains('show')) {
+                openMobileTeam();
+                
+                // Add haptic feedback if available
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+            }
+        }
+    }
+    
+    // Swipe up to close drawer
+    const drawer = document.querySelector('.mobile-team-drawer');
+    if (drawer) {
+        drawer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+        
+        drawer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleDrawerSwipeGesture();
+        }, { passive: true });
+    }
+    
+    function handleDrawerSwipeGesture() {
+        const swipeThreshold = 80;
+        const verticalDistance = touchStartY - touchEndY;
+        const horizontalDistance = Math.abs(touchStartX - touchEndX);
+        
+        // Swipe up gesture to close drawer
+        if (verticalDistance > swipeThreshold && horizontalDistance < verticalDistance) {
+            const sidebar = document.getElementById('chat-sidebar');
+            if (sidebar && sidebar.classList.contains('show')) {
+                closeMobileTeam();
+                
+                // Add haptic feedback if available
+                if (navigator.vibrate) {
+                    navigator.vibrate(30);
+                }
+            }
+        }
+    }
+}
+
+// Enhanced mobile touch feedback
+function addTouchFeedback(element) {
+    if (!element) return;
+    
+    element.addEventListener('touchstart', () => {
+        element.style.transform = 'scale(0.95)';
+        element.style.opacity = '0.8';
+    }, { passive: true });
+    
+    element.addEventListener('touchend', () => {
+        setTimeout(() => {
+            element.style.transform = '';
+            element.style.opacity = '';
+        }, 150);
+    }, { passive: true });
+}
+
+// Mobile team drawer functionality
+function toggleMobileTeam() {
+    const sidebar = document.getElementById('chat-sidebar');
+    if (sidebar.classList.contains('show')) {
+        closeMobileTeam();
+    } else {
+        openMobileTeam();
+    }
+}
+
+function openMobileTeam() {
+    const sidebar = document.getElementById('chat-sidebar');
+    sidebar.classList.add('show');
+    
+    // Add event listener to close on background tap
+    setTimeout(() => {
+        document.addEventListener('click', handleMobileTeamBackdrop);
+    }, 100);
+}
+
+function closeMobileTeam() {
+    const sidebar = document.getElementById('chat-sidebar');
+    sidebar.classList.remove('show');
+    document.removeEventListener('click', handleMobileTeamBackdrop);
+}
+
+function handleMobileTeamBackdrop(e) {
+    const drawer = document.querySelector('.mobile-team-drawer');
+    const sidebar = document.getElementById('chat-sidebar');
+    
+    if (sidebar.classList.contains('show') && !drawer.contains(e.target)) {
+        closeMobileTeam();
+    }
+}
+
+// Responsive layout setup
+function setupResponsiveLayout() {
+    const mobileToggle = document.getElementById('mobile-team-toggle');
+    
+    function updateLayout() {
+        const isMobile = window.innerWidth <= 968;
+        
+        if (isMobile) {
+            // Show mobile toggle button when Pokemon is selected
+            if (currentPokemon && mobileToggle) {
+                mobileToggle.style.display = 'inline-block';
+            }
+        } else {
+            // Hide mobile toggle on desktop
+            if (mobileToggle) {
+                mobileToggle.style.display = 'none';
+            }
+            closeMobileTeam();
+        }
+    }
+    
+    // Update on resize
+    window.addEventListener('resize', updateLayout);
+    updateLayout();
+}
 
 async function loadTeam() {
     try {
@@ -72,7 +236,7 @@ function displayTeam() {
         }
         
         return `
-            <div class="team-member" onclick="selectPokemon(${pokemon.id})" data-pokemon-id="${pokemon.id}">
+            <div class="team-member mobile-touch-target" onclick="selectPokemon(${pokemon.id})" data-pokemon-id="${pokemon.id}">
                 <div class="member-sprite">
                     <img src="${spriteUrl}" alt="${pokemon.species_name}" class="member-sprite-img" 
                          onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.species_id}.png'">
@@ -87,6 +251,12 @@ function displayTeam() {
             </div>
         `;
     }).join('');
+    
+    // Add touch feedback to team members
+    const teamMembers = document.querySelectorAll('.team-member');
+    teamMembers.forEach(member => {
+        addTouchFeedback(member);
+    });
 }
 
 function showEmptyTeam() {
@@ -137,6 +307,19 @@ async function selectPokemon(pokemonId) {
         // Focus message input
         const messageInput = document.getElementById('message-input');
         if (messageInput) messageInput.focus();
+        
+        // Mobile-specific behavior
+        const isMobile = window.innerWidth <= 968;
+        if (isMobile) {
+            // Close mobile team drawer
+            closeMobileTeam();
+            
+            // Show mobile team toggle button
+            const mobileToggle = document.getElementById('mobile-team-toggle');
+            if (mobileToggle) {
+                mobileToggle.style.display = 'inline-block';
+            }
+        }
         
         console.log('Pokemon selection completed successfully');
         

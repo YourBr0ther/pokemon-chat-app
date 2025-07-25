@@ -4,14 +4,21 @@
 
 {% block content %}
 <div class="chat-container">
-    <div class="chat-sidebar">
-        <h3>Your Team</h3>
-        <div class="team-list" id="team-list">
-            <!-- Team Pokemon will be displayed here -->
-        </div>
-        <div class="sidebar-empty hidden" id="sidebar-empty">
-            <p>No team members yet</p>
-            <a href="/pokedex" class="btn btn-small">Build Team</a>
+    <div class="chat-sidebar" id="chat-sidebar">
+        <!-- Mobile drawer content -->
+        <div class="mobile-team-drawer">
+            <div class="drawer-handle" onclick="toggleMobileTeam()"></div>
+            <div class="mobile-team-header">
+                <h3>Select Pokemon</h3>
+                <button class="mobile-team-close" onclick="toggleMobileTeam()">&times;</button>
+            </div>
+            <div class="team-list" id="team-list">
+                <!-- Team Pokemon will be displayed here -->
+            </div>
+            <div class="sidebar-empty hidden" id="sidebar-empty">
+                <p>No team members yet</p>
+                <a href="/pokedex" class="btn btn-small">Build Team</a>
+            </div>
         </div>
     </div>
 
@@ -26,9 +33,25 @@
                     <span id="current-pokemon-details"></span>
                 </div>
             </div>
+            <!-- Mobile pull indicator -->
+            <div class="mobile-pull-indicator">
+                <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+                    <path d="M2 2L8 8L14 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <div class="chat-actions">
-                <button class="btn btn-small btn-secondary" id="clear-chat-btn" onclick="clearChatHistory()" style="display: none;">
-                    Clear History
+                <!-- Mobile minimal action buttons -->
+                <button class="mobile-action-btn" onclick="window.location.href='/pokedex'" title="Pokedex">
+                    📱
+                </button>
+                <button class="mobile-action-btn" onclick="window.location.href='/import'" title="Import">
+                    📁
+                </button>
+                <button class="mobile-team-toggle" id="mobile-team-toggle" onclick="toggleMobileTeam()" style="display: none;" title="Switch Pokemon">
+                    👥
+                </button>
+                <button class="mobile-action-btn" id="clear-chat-btn" onclick="clearChatHistory()" style="display: none;" title="Clear History">
+                    🗑️
                 </button>
             </div>
         </div>

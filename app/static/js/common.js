@@ -93,9 +93,141 @@ function setActiveNavLink() {
     });
 }
 
+// PWA functionality
+let deferredPrompt;
+let installButton;
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/static/sw.js')
+            .then((registration) => {
+                console.log('PokeChat: Service Worker registered successfully:', registration.scope);
+                
+                // Check for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            showNotification('PokeChat has been updated! Refresh to get the latest version.', 'info');
+                        }
+                    });
+                });
+            })
+            .catch((error) => {
+                console.log('PokeChat: Service Worker registration failed:', error);
+            });
+    });
+}
+
+// PWA Install Prompt
+window.addEventListener('beforeinstallprompt', (e) => {
+    console.log('PokeChat: Install prompt triggered');
+    e.preventDefault();
+    deferredPrompt = e;
+    showInstallButton();
+});
+
+function showInstallButton() {
+    // Create install button if it doesn't exist
+    if (!installButton) {
+        installButton = document.createElement('button');
+        installButton.innerHTML = '📱 Install App';
+        installButton.className = 'install-btn';
+        installButton.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+            animation: installPulse 2s infinite;
+        `;
+        
+        installButton.addEventListener('click', installPWA);
+        document.body.appendChild(installButton);
+        
+        // Add CSS animation
+        if (!document.getElementById('install-styles')) {
+            const style = document.createElement('style');
+            style.id = 'install-styles';
+            style.textContent = `
+                @keyframes installPulse {
+                    0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+                    50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5); }
+                }
+                .install-btn:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+    
+    installButton.style.display = 'block';
+}
+
+async function installPWA() {
+    if (!deferredPrompt) return;
+    
+    installButton.style.display = 'none';
+    deferredPrompt.prompt();
+    
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`PokeChat: User response to install prompt: ${outcome}`);
+    
+    if (outcome === 'accepted') {
+        showNotification('PokeChat installed successfully! 🎉', 'success');
+    }
+    
+    deferredPrompt = null;
+}
+
+// Handle successful installation
+window.addEventListener('appinstalled', () => {
+    console.log('PokeChat: PWA was installed');
+    showNotification('Welcome to PokeChat! The app is now installed on your device.', 'success');
+    if (installButton) {
+        installButton.style.display = 'none';
+    }
+});
+
+// App state management for PWA
+function handlePWAState() {
+    // Check if running as PWA
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                        window.navigator.standalone === true;
+    
+    if (isStandalone) {
+        document.body.classList.add('pwa-mode');
+        console.log('PokeChat: Running in PWA mode');
+    }
+}
+
 // Initialize common functionality
 document.addEventListener('DOMContentLoaded', () => {
     setActiveNavLink();
+    handlePWAState();
+    
+    // Add loading class to body initially
+    document.body.classList.add('loading');
+    
+    // Remove loading class after content loads
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.body.classList.remove('loading');
+            document.body.classList.add('loaded');
+        }, 300);
+    });
 });
 
 // Debounce function for search
