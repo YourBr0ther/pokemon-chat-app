@@ -1,0 +1,38 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Chat bubble shape with rounded corners -->
+  <defs>
+    <path id="bubble-shape" d="M64 64 Q64 32 96 32 L416 32 Q448 32 448 64 L448 320 Q448 352 416 352 L160 352 L96 416 Q64 448 64 416 L64 96 Q64 64 96 64 Z"/>
+  </defs>
+  
+  <!-- Top half - Teal/Turquoise -->
+  <clipPath id="top-half">
+    <rect x="0" y="0" width="512" height="256"/>
+  </clipPath>
+  
+  <!-- Bottom half - Yellow -->
+  <clipPath id="bottom-half">
+    <rect x="0" y="256" width="512" height="256"/>
+  </clipPath>
+  
+  <!-- Chat bubble background -->
+  <!-- Top half (teal) -->
+  <use href="#bubble-shape" fill="#20B2AA" clip-path="url(#top-half)"/>
+  
+  <!-- Bottom half (yellow) -->
+  <use href="#bubble-shape" fill="#FFD700" clip-path="url(#bottom-half)"/>
+  
+  <!-- Pokeball center ring (dark teal) -->
+  <circle cx="256" cy="256" r="96" fill="#1e525a" stroke="none"/>
+  
+  <!-- Pokeball center button (cream/off-white) -->
+  <circle cx="256" cy="256" r="48" fill="#F5F5DC" stroke="none"/>
+  
+  <!-- Inner highlight for depth -->
+  <circle cx="256" cy="240" r="24" fill="#FFFFFF" opacity="0.6"/>
+  
+  <!-- Pokeball dividing line -->
+  <rect x="64" y="248" width="384" height="16" fill="#1e525a"/>
+  
+  <!-- Small pokeball button detail -->
+  <circle cx="256" cy="256" r="12" fill="#1e525a"/>
+</svg>

@@ -1,0 +1,28 @@
+<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+  <!-- Chat bubble shape -->
+  <defs>
+    <path id="bubble-shape" d="M12 12 Q12 6 18 6 L78 6 Q84 6 84 12 L84 60 Q84 66 78 66 L30 66 L18 78 Q12 84 12 78 L12 18 Q12 12 18 12 Z"/>
+  </defs>
+  
+  <!-- Top half - Teal -->
+  <clipPath id="top-half">
+    <rect x="0" y="0" width="96" height="48"/>
+  </clipPath>
+  
+  <!-- Bottom half - Yellow -->
+  <clipPath id="bottom-half">
+    <rect x="0" y="48" width="96" height="48"/>
+  </clipPath>
+  
+  <!-- Chat bubble background -->
+  <use href="#bubble-shape" fill="#20B2AA" clip-path="url(#top-half)"/>
+  <use href="#bubble-shape" fill="#FFD700" clip-path="url(#bottom-half)"/>
+  
+  <!-- Chat elements instead of pokeball -->
+  <circle cx="35" cy="35" r="3" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="48" cy="35" r="3" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="61" cy="35" r="3" fill="#FFFFFF" opacity="0.8"/>
+  
+  <!-- Dividing line -->
+  <rect x="12" y="46" width="72" height="3" fill="#1e525a"/>
+</svg>
